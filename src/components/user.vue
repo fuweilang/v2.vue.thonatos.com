@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+    this is user
     <p class="detail">
       {{ msg }}
     </p>

@@ -1,22 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Mint from 'mint-ui'
+import Element from 'element-ui'
 
 import App from './App'
 import store from './store/'
 
-import Info from './components/info'
-import About from './components/about'
-import User from './components/user'
+import Navbar from './components/navbar'
+import List from './projects/list'
 
-Vue.use(Mint)
+Vue.use(Element)
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/about', component: About },
-  { path: '/info', component: Info },
-  { path: '/user', component: User },
-  { path: '/', redirect: '/user' }
+  {
+    path: '/list',
+    components: {
+      navbar: Navbar,
+      default: List
+    }
+  },
+  { path: '/', redirect: '/list' },
+  { path: '*', redirect: '/' }
 ]
 
 const router = new VueRouter({

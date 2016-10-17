@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    this is about
+    this is list
     <p class="detail">
       {{ msg }}
     </p>
@@ -9,9 +9,35 @@
 
 <script>
 export default {
+  name: 'ChartsView',
+
+  components: {
+  },
+
   data () {
     return {
-      msg: 'Arashivision internal account system.'
+      msg: '2222222'
+    }
+  },
+
+  vuex: {
+    actions: {
+    },
+    getters: {
+      // list: getChartList
+    }
+  },
+
+  computed: {
+    href (url) {
+      console.log(url)
+      return url
+    }
+  },
+
+  route: {
+    data ({ to }) {
+      console.log(11111)
     }
   }
 }

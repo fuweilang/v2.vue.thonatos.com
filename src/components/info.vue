@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+  	this is info
     <h1>{{ msg }}</h1>
   </div>
 </template>
