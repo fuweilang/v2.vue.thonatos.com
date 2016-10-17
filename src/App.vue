@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <div>
+    <div>
       <el-row>
         <el-col :span="4">
           <div class="grid-list">
@@ -25,8 +25,7 @@
           </div>
         </el-col>
       </el-row>
-    </div> -->
-    <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -37,15 +36,8 @@ export default {
       selected: 'user'
     }
   },
-  methods: {
-    loadMore () {
-      console.log(this)
-    }
-  },
   watch: {
     selected (val) {
-      console.log(this)
-      this.$store.commit('increment')
       this._router.push(val)
     }
   }
@@ -88,11 +80,12 @@ export default {
   .clearfix { 
     *zoom:1; 
   }
-  
-  #app {  
-    overflow: hidden;
-    display: flex;
+
+	#app {	
+		overflow: hidden;
     min-height: 100vh;
+    max-height: 100%;
+    display: flex;
     flex-direction: column;
 
     .grid-list {
