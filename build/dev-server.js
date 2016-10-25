@@ -2,6 +2,8 @@ var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
 var config = require('../config')
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = process.env.NODE_ENV === 'testing'
@@ -15,6 +17,10 @@ var port = process.env.PORT || config.dev.port
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+app.use(morgan('tiny'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api', require('./api')(app));
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

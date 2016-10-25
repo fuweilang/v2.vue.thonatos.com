@@ -5,7 +5,7 @@ var projectRoot = path.resolve(__dirname, '../')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/release/entry.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -79,6 +79,9 @@ module.exports = {
   },
   eslint: {
     formatter: require('eslint-friendly-formatter')
+  },
+  externals: {
+    'tinymce': 'tinymce'
   },
   vue: {
     loaders: utils.cssLoaders(),

@@ -13,7 +13,13 @@
   },
   "dependencies": {
     "element-ui": "^1.0.0-rc.7",
+    "fs": "^0.0.1-security",
     "mint-ui": "^2.0.2",
+    "moment": "^2.15.1",
+    "morgan": "^1.7.0",
+    "superagent": "^2.3.0",
+    "tinymce": "^4.4.3",
+    "ueditor": "^1.1.4",
     "vue": "^2.0.1",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.1",

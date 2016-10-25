@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    this is about
+    this is more
     <p class="detail">
       {{ msg }}
     </p>
@@ -9,9 +9,11 @@
 
 <script>
 export default {
+  name: 'more',
+
   data () {
     return {
-      msg: 'Arashivision internal account system.'
+      msg: '111111'
     }
   }
 }
