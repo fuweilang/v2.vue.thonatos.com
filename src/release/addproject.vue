@@ -2,7 +2,7 @@
   <div class="add">
 
     <div class="title clearfix">
-      <h3>Projects</h3>
+      <h3>Projects {{ title }}</h3>
     </div>
 
     <el-card class="box-card">
@@ -25,7 +25,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="Description *">
-          <textarea id="textarea" name="" value="project.desc" cols="30" rows="10" style="visibility:hidden;">
+          <textarea id="textarea" name="" cols="30" rows="10" style="visibility:hidden;">
           </textarea>
         </el-form-item>
       </el-form>
@@ -44,7 +44,7 @@ import { mapGetters } from 'vuex'
 var tinymce = require('tinymce')
 
 export default {
-  name: 'add',
+  name: 'addproject',
 
   data () {
     var validaeFn = (rule, value, callback) => {
@@ -76,6 +76,7 @@ export default {
         desc: ''
       },
       admin: '',
+      title: '',
       rules: {
         name: [
           { message: '请填写此字段', trigger: 'blur' },
@@ -92,7 +93,7 @@ export default {
   computed: {
     ...mapGetters({
       project: 'project',
-      admin: 'admin'
+      admin: 'getAdmin'
     })
   },
 
@@ -100,27 +101,9 @@ export default {
     openPopup: function (text) {
       this.$alert(text, '温馨提示')
     },
-    getDesc: function (iframeid, textareaid) {
-      var tmp = ''
-      if (document.frames) {
-        tmp = document.frames[iframeid].document.getElementById(textareaid).innerHTML
-      } else {
-        tmp = document.getElementById(iframeid).contentWindow.document.getElementById(textareaid).innerHTML
-      }
-      return tmp
-    },
-    setDesc: function (iframeid, textareaid) {
-      // tinymce.get('textarea').
-      var target = ''
-      if (document.frames) {
-        target = document.frames[iframeid].document.getElementById(textareaid)
-      } else {
-        target = document.getElementById(iframeid).contentWindow.document.getElementById(textareaid)
-      }
-      target.innerHTML = this.project.desc
-    },
     handleReset: function () {
       this.$refs.project.resetFields()
+      tinymce.activeEditor.getBody().innerHTML = ''
     },
     handleSubmit: function (ev) {
       this.$refs.project.validate((valid) => {
@@ -130,7 +113,7 @@ export default {
           query = this.$route.query
           id = query.id
           opts = {}
-          desc = _this.getDesc('textarea_ifr', 'tinymce')
+          desc = tinymce.activeEditor.getContent()
           if (!id) {
             opts = this.project
             opts.desc = desc
@@ -173,14 +156,15 @@ export default {
       })
     },
     getProject: function (id) {
-      var _this = this
       this.$store.dispatch('getProject', {
         id: id,
         callback: function (data) {
           tinymce.EditorManager.init({
-            selector: '#textarea'
+            selector: '#textarea',
+            setup: function (ed) {
+              ed.getElement().innerHTML = data.desc
+            }
           })
-          _this.setDesc('textarea_ifr', 'tinymce')
         }
       })
     },
@@ -190,6 +174,10 @@ export default {
         tinymce.EditorManager.init({
           selector: '#textarea'
         })
+        var $selector = tinymce.activeEditor.getBody()
+        if ($selector) {
+          $selector.innerHTML = ''
+        }
       }, 0)
     },
     loading: function () {
@@ -197,8 +185,10 @@ export default {
       query = this.$route.query
       id = query.id
       if (id) {
+        this.title = 'Edit'
         this.getProject(id)
       } else {
+        this.title = 'Add'
         this.setProjectEmpty()
       }
     }
@@ -213,7 +203,6 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      tinymce.EditorManager.execCommand('mceRemoveEditor', true, 'textarea')
       this.loading()
     }
   }

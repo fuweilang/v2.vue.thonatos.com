@@ -2,68 +2,67 @@
   <div class="list">
 
     <div class="datalist-title clearfix">
-      <h3>Projects</h3>
+      <h3>Release List</h3>
     </div>
 
     <el-card class="box-card">
+      <div class="btn-box clearfix" v-if="owner === admin">
+        <el-button type="primary">
+          <router-link :to="{ path: '/addrelease', query: { pid: pid, owner: owner }}">
+            <span>Add Release</span>
+          </router-link>
+        </el-button>
+      </div>
+
       <ul class="datatable">
         <li class="datatable-title">
           <el-row>
-            <el-col :span="5">
-              <div class="ceil">
-                <span>Name</span>
-              </div>
+            <el-col :span="2">
+              <span>Version</span>
             </el-col>
             <el-col :span="5">
-              <div class="ceil">
-                <span>Owner</span>
-              </div>
+              <span>Owner</span>
             </el-col>
-            <el-col :span="6">
-              <div class="ceil">
-                <span>Created</span>
-              </div>
+            <el-col :span="5">
+              <span>Summary</span>
+            </el-col>
+            <el-col :span="5">
+              <span>Created</span>
             </el-col>
             <el-col :span="3">
-              <div class="ceil">
-                <span>Visibility</span>
-              </div>
+              <span>Link</span>
             </el-col>
-            <el-col :span="5">
-              <div class="ceil">
-                <span>#Edit</span>
-              </div>
+            <el-col :span="4">
+              <span>#Edit</span>
             </el-col>
           </el-row>
         </li>
-        <li v-for="item in list.projects" class="data">
-          <div class='item' @click="item.deschide=!item.deschide">
+        <li v-for="item in releaselist.releases" class="data">
+          <div class="item" @click="item.deschide=!item.deschide">
             <el-row>
-              <el-col :span="5">
-                <div class="ceil">
-                  <router-link :to="'/release/'+item._id + '/' + item.owner" class='link'>{{ item.name }}</router-link>
-                </div>
+              <el-col :span="2">
+                <span>{{ item.version }}</span>
               </el-col>
               <el-col :span="5">
-                <div class="ceil">
-                  <span>{{ item.owner }}</span>
-                </div>
+                <span>{{ owner }}</span>
               </el-col>
-              <el-col :span="6">
-                <div class="ceil">
-                  <span v-if="!!item.createdAt">{{ item.createdAt }}</span>
-                  <span v-else> -- </span>
-                </div>
+              <el-col :span="5">
+                <span v-if="!!item.summary">{{ item.summary }}</span>
+                <span v-else> 11 </span>
+              </el-col>
+              <el-col :span="5">
+                <span v-if="!!item.createdAt">{{ item.createdAt }}</span>
+                <span v-else> -- </span>
               </el-col>
               <el-col :span="3">
-                <div class="ceil">
-                  <span>{{ item.visibility }}</span>
-                </div>
+                <el-button size="mini" type="primary">
+                  <a :href="item.link" class="link-a">Download</a>
+                </el-button>
               </el-col>
-              <el-col :span="5">
-                <div class="ceil" v-if="item.owner === admin">
-                  <el-button size="mini" type="primary" >
-                    <router-link :to="{ path: '/add', query: { id: item._id }}" class="edit-btn">
+              <el-col :span="4">
+                <div v-if="owner === admin">
+                  <el-button size="mini" type="primary">
+                    <router-link :to="{ path: '/addrelease', query: { pid: pid, rid: item._id, owner:owner }}" class="edit-btn">
                       <i class="el-icon-edit"></i>
                       <span>Edit</span>
                     </router-link>
@@ -78,7 +77,7 @@
               </el-col>
             </el-row>
           </div>
-          <div class="detail" :class="{ 'hide': item.deschide}" v-html="item.desc">
+          <div class="detail" v-bind:class="{ 'hide': item.deschide}" v-html="item.desc">
           </div>
         </li>
       </ul>
@@ -86,10 +85,10 @@
       <div class="paging">
         <el-pagination
           @currentchange="handleCurrentChange"
-          :current-page="list.currentPage"
+          :current-page="releaselist.currentPage"
           :page-size="12"
           layout="prev, pager, next, jumper"
-          :total="list.pageTotal">
+          :total="releaselist.pageTotal">
         </el-pagination>
       </div>
 
@@ -102,39 +101,45 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'list',
+  name: 'releaselist',
 
-  components: {
+  computed: {
+    ...mapGetters({
+      releaselist: 'releaselist',
+      admin: 'getAdmin'
+    })
   },
 
   methods: {
     ...mapActions([
-      'loadList'
+      'loadReleaselist'
     ]),
     handleCurrentChange: function (index) {
-      index = parseInt(index)
-      var url = '/list/12/' + index
-      this.$router.push(url)
+      this.$store.dispatch('loadReleaselist', {
+        p: 12,
+        c: parseInt(index),
+        pid: this.pid
+      })
     },
     openPopup: function (id) {
-      var _this, pid
-      pid = id
+      var _this, rid
+      rid = id
       _this = this
-      if (!pid) {
+      if (!rid) {
         return
       }
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('deleteProject', {
-          pid: pid,
+        this.$store.dispatch('deleteRelease', {
+          rid: rid,
           action: function (data) {
             if (data.code === 1) {
               _this.$message({
                 type: 'success',
                 message: data.msg
               })
-              _this.$router.push('/list')
+              _this.loading()
             } else {
               _this.$message({
                 type: 'error',
@@ -151,43 +156,31 @@ export default {
       })
     },
     loading: function () {
-      var p, c
-      p = this.$route.params.p
-      c = this.$route.params.c
-      if (!p && !c) {
-        p = 12
-        c = 1
+      var pid, owner
+      pid = this.$route.params.id
+      owner = this.$route.params.owner
+      if (!pid && !owner) {
+        return
       }
-      this.$store.dispatch('loadList', {
-        p: p,
-        c: c
+      this.pid = pid
+      this.owner = owner
+      this.$store.dispatch('loadReleaselist', {
+        pid: pid,
+        p: 12,
+        c: 1
       })
     }
-  },
-
-  computed: {
-    ...mapGetters({
-      list: 'list',
-      admin: 'admin'
-    })
   },
 
   created () {
     this.loading()
   },
-
-  watch: {
-    '$route' (to, from) {
-      this.loading()
-    }
-  },
-
   data () {
     return {
-      list: {},
-      p: 12,
-      c: 1,
-      admin: ''
+      releaselist: {},
+      owner: '',
+      pid: '',
+      admin: null
     }
   }
 }
@@ -206,6 +199,15 @@ export default {
         line-height: 30px;
         font-size: 17px;
         color: @color;
+      }
+    }
+    .btn-box {
+      padding: 0px 10px 20px 10px;
+      button {
+        float: right;
+        a {
+          color: #fff;
+        }
       }
     }
     .datatable {
@@ -240,17 +242,16 @@ export default {
             display: none;
           }
         }
-        .ceil {
+        .el-col {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           line-height: 40px;
           padding-left: 18px;
           padding-right: 18px;
-          .link {
-            color: #20a0ff;
-          }
-          .edit-btn {
+          height: 40px;
+          .edit-btn,
+          .link-a {
             color: #fff;
           }
         }

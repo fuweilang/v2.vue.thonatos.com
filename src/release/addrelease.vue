@@ -2,10 +2,7 @@
   <div class="add">
 
     <div class="title clearfix">
-      <h3>Release</h3>
-      <a class="collapse-link">
-        <i class="el-icon-arrow-up"></i>
-      </a>
+      <h3>Release {{ title }}</h3>
     </div>
 
     <el-card class="box-card">
@@ -67,6 +64,7 @@ export default {
 
     return {
       releaseDetail: {},
+      title: '',
       rules: {
         version: [
           { message: '请填写此字段', trigger: 'blur' },
@@ -94,26 +92,9 @@ export default {
     openPopup: function (text) {
       this.$alert(text, '温馨提示')
     },
-    getDesc: function (iframeid, textareaid) {
-      var tmp = ''
-      if (document.frames) {
-        tmp = document.frames[iframeid].document.getElementById(textareaid).innerHTML
-      } else {
-        tmp = document.getElementById(iframeid).contentWindow.document.getElementById(textareaid).innerHTML
-      }
-      return tmp
-    },
-    setDesc: function (iframeid, textareaid) {
-      var target = ''
-      if (document.frames) {
-        target = document.frames[iframeid].document.getElementById(textareaid)
-      } else {
-        target = document.getElementById(iframeid).contentWindow.document.getElementById(textareaid)
-      }
-      target.innerHTML = this.releaseDetail.desc
-    },
     handleReset: function () {
       this.$refs.releaseDetail.resetFields()
+      tinymce.activeEditor.getBody().innerHTML = ''
     },
     handleSubmit: function (ev) {
       this.$refs.releaseDetail.validate((valid) => {
@@ -124,7 +105,7 @@ export default {
           query = this.$route.query
           rid = query.rid
           opts = {}
-          desc = _this.getDesc('textarea_ifr', 'tinymce')
+          desc = tinymce.activeEditor.getContent()
           if (!rid) {
             opts = this.releaseDetail
             opts.desc = desc
@@ -172,22 +153,29 @@ export default {
         return
       }
       if (rid) {
-        var _this = this
+        this.title = 'Edit'
         this.$store.dispatch('getReleaseDetail', {
           rid: rid,
-          callback: function () {
+          callback: function (data) {
             tinymce.EditorManager.init({
-              selector: '#textarea'
+              selector: '#textarea',
+              setup: function (e) {
+                e.getElement().innerHTML = data.desc
+              }
             })
-            _this.setDesc('textarea_ifr', 'tinymce')
           }
         })
       } else {
+        this.title = 'Add'
         this.$store.dispatch('setReleaseEmpty')
         setTimeout(function () {
           tinymce.EditorManager.init({
             selector: '#textarea'
           })
+          var $selector = tinymce.activeEditor.getBody()
+          if ($selector) {
+            $selector.innerHTML = ''
+          }
         }, 0)
       }
     }
@@ -196,7 +184,6 @@ export default {
   created () {
     this.loading()
   },
-
   destroyed () {
     tinymce.EditorManager.execCommand('mceRemoveEditor', true, 'textarea')
   },
@@ -221,25 +208,6 @@ export default {
         line-height: 30px;
         font-size: 17px;
         color: @color;
-      }
-      .collapse-link {
-        display: block;
-        float: right;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        i {
-          display: block;
-          width: 14px;
-          height: 14px;
-          font-size: 14px;
-          line-height: 14px;
-          color: #C5C7CB;
-          cursor: pointer;
-        }
       }
     }
     .el-form {

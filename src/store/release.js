@@ -5,15 +5,9 @@ import VueResource from 'vue-resource'
 Vue.use(Vuex)
 Vue.use(VueResource)
 
-export default new Vuex.Store({
+const moduleRelease = {
   state: {
-    admin: 'thonatos@sina.com',
-    info: {
-      active: false,
-      submit_text: '初始化',
-      msg: ''
-    },
-    list: {},
+    projectlist: {},
     project: {
       name: '',
       link: '',
@@ -21,11 +15,11 @@ export default new Vuex.Store({
       visibility: 'internal',
       desc: ''
     },
-    release: {},
+    releaselist: {},
     releaseDetail: {}
   },
   mutations: {
-    loadList (state, opts) {
+    loadProjectlist (state, opts) {
       var p, c, list
       if (typeof opts === 'undefined' || opts == null) {
         p = 12
@@ -36,11 +30,14 @@ export default new Vuex.Store({
       }
       Vue.http.get('./api/project/gets?p=' + p + '&c=' + c).then((res) => {
         list = res.body
+        if (!list.projects) {
+          return
+        }
         for (var i = 0; i < list.projects.length; i++) {
           list.projects[i].deschide = true
         }
-        state.list = list
-        state.list.pageTotal = list.pageCount * list.perPageNum
+        state.projectlist = list
+        state.projectlist.pageTotal = list.pageCount * list.perPageNum
       }, (res) => {
         console.log(res)
       })
@@ -97,7 +94,7 @@ export default new Vuex.Store({
           state.project.tags = state.project.tags.join(',')
         }
         if (opts.callback) {
-          opts.callback()
+          opts.callback(state.project)
         }
       }, (res) => {
         console.log(res)
@@ -133,7 +130,7 @@ export default new Vuex.Store({
         console.log(res)
       })
     },
-    loadRelease (state, opts) {
+    loadReleaselist (state, opts) {
       var url, release
       url = './api/release/gets?pid=' + opts.pid + '&p=' + opts.p + '&c=' + opts.c
       Vue.http.get(url).then((res) => {
@@ -141,8 +138,8 @@ export default new Vuex.Store({
         for (var i = 0; i < release.releases.length; i++) {
           release.releases[i].deschide = true
         }
-        state.release = release
-        state.release.pageTotal = release.pageCount * release.perPageNum
+        state.releaselist = release
+        state.releaselist.pageTotal = release.pageCount * release.perPageNum
       }, (res) => {
         console.log(res)
       })
@@ -156,7 +153,7 @@ export default new Vuex.Store({
           state.releaseDetail = data
         }
         if (opts.callback) {
-          opts.callback()
+          opts.callback(state.releaseDetail)
         }
       }, (res) => {
         console.log(res)
@@ -233,25 +230,22 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    list: state => {
-      return state.list
+    projectlist: state => {
+      return state.projectlist
     },
     project: state => {
       return state.project
     },
-    release: state => {
-      return state.release
+    releaselist: state => {
+      return state.releaselist
     },
     releaseDetail: state => {
       return state.releaseDetail
-    },
-    admin: state => {
-      return state.admin
     }
   },
   actions: {
-    loadList (context, opts) {
-      context.commit('loadList', opts)
+    loadProjectlist (context, opts) {
+      context.commit('loadProjectlist', opts)
     },
     addProject (context, opts) {
       context.commit('addProject', opts)
@@ -268,8 +262,8 @@ export default new Vuex.Store({
     deleteProject (context, opts) {
       context.commit('deleteProject', opts)
     },
-    loadRelease (context, opts) {
-      context.commit('loadRelease', opts)
+    loadReleaselist (context, opts) {
+      context.commit('loadReleaselist', opts)
     },
     getReleaseDetail (context, opts) {
       context.commit('getReleaseDetail', opts)
@@ -287,4 +281,6 @@ export default new Vuex.Store({
       context.commit('deleteRelease', opts)
     }
   }
-})
+}
+
+export default moduleRelease
