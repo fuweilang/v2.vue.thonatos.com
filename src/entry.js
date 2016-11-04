@@ -20,7 +20,6 @@ const routes = [
   {
     path: '/login',
     component: Login
-    // meta: { needGuard: true }
   },
   {
     path: '/projects/:p/:c',

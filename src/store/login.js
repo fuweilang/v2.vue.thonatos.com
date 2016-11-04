@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import Cache from './lib/cache'
-// var cache = new Cache()
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -10,7 +9,7 @@ Vue.use(VueResource)
 const moduleLogin = {
   state: {
     admin: null,
-    status: null,
+    loginStatus: null,
     cache: new Cache()
   },
   mutations: {
@@ -23,27 +22,27 @@ const moduleLogin = {
         cache.set(key, data[key])
       }
       obj = cache.gets()
-      if (obj.status && obj.admin && obj.status.toString() === data.status.toString() && obj.admin === data.admin) {
+      if (obj.loginStatus && obj.admin && obj.loginStatus.toString() === data.loginStatus.toString() && obj.admin === data.admin) {
         callback(true)
       }
     },
     logout (state, callback) {
       var arr, obj, cache
       cache = state.cache
-      arr = ['admin', 'status']
+      arr = ['admin', 'loginStatus']
       cache.removes(arr)
       obj = cache.gets()
-      if (!obj.admin && !obj.status) {
+      if (!obj.admin && !obj.loginStatus) {
         callback(true)
       } else {
         callback(false)
       }
     },
     validGuard (state, callback) {
-      var status, cache
+      var loginStatus, cache
       cache = state.cache
-      status = cache.get('status')
-      if (status && status.toString() === '1') {
+      loginStatus = cache.get('loginStatus')
+      if (loginStatus && loginStatus.toString() === '1') {
         state.admin = cache.get('admin')
         callback(true)
       } else {

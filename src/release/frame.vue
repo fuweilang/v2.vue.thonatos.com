@@ -64,11 +64,9 @@
 export default {
   methods: {
     logout: function (e) {
-      console.log(122222222)
       var _this = this
       this.$store.dispatch('logout', function (bool) {
         if (bool) {
-          console.log(_this)
           _this.$router.push('/login')
         }
       })

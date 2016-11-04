@@ -24,7 +24,6 @@ var requestFn = function (type, url, opts, callback) {
 		.end(function(err, getRes){
 			if(err){
 				callback({
-						errcode: '0000',
 						flag: false,
 						error: err
 				});
@@ -177,11 +176,11 @@ module.exports = function(app) {
 			.post(function(req, res) {
 				opts = req.body
 				if(!opts.rid) {
-					return
+						return
 				}
 				url = host + '/release/del'
 				requestFn('post', url, opts, function(data) {
-					res.json(data)
+						res.json(data)
 				})
 			})
 

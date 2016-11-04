@@ -6,7 +6,7 @@
           <el-input v-model="loginMsg.username"></el-input>
         </el-form-item>
         <el-form-item label="password *" prop="password">
-          <el-input v-model="loginMsg.password"></el-input>
+          <el-input v-model="loginMsg.password" type="password"></el-input>
         </el-form-item>
       </el-form>
       <div class="btn-box">
@@ -28,7 +28,7 @@ export default {
           this.$store.dispatch('login', {
             data: {
               admin: 'fuwl90@163.com',
-              status: 1
+              loginStatus: 1
             },
             callback: function (bool) {
               if (bool) {
@@ -64,7 +64,7 @@ export default {
           { validator: validaeFn }
         ],
         password: [
-          { message: '请填写此字段', trigger: 'blur' },
+          { message: '请填写此字段', trigger: 'blur', required: true },
           { validator: validaeFn }
         ]
       }
