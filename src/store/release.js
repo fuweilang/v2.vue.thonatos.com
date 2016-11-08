@@ -184,7 +184,6 @@ const moduleRelease = {
       offset = p * (c - 1)
       url = state.host + '/project/' + opts.pid + '/release?pid=' + opts.pid + '&limit=' + limit + '&offset=' + offset
       headers = getHeaders(state)
-      console.log(moduleRelease)
       Vue.http.get(url, {
         headers: headers
       }).then((res) => {
@@ -192,7 +191,6 @@ const moduleRelease = {
         if (release.count <= 0) {
           return
         }
-        console.log(release)
         for (var i = 0; i < release.rows.length; i++) {
           release.rows[i].deschide = true
         }

@@ -24,7 +24,6 @@ const moduleLogin = {
       url = state.host + '/auth'
       Vue.http.post(url, data).then((res) => {
         data = res.body
-        console.log(data)
         if (data.flag === false) {
           callback(false)
         } else {
