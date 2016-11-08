@@ -10,40 +10,54 @@ const moduleLogin = {
   state: {
     admin: null,
     loginStatus: null,
-    cache: new Cache()
+    cache: new Cache(),
+    host: 'http://192.168.3.60:3000/api',
+    tid: null
   },
   mutations: {
     login (state, opts) {
-      var data, callback, obj, cache
+      var data, callback, cache, url, cacheObj
       cache = state.cache
       data = opts.data
+      console.log(data)
+      if (!data.jobnumber || !data.password) {
+        return
+      }
       callback = opts.callback
-      for (var key in data) {
-        cache.set(key, data[key])
-      }
-      obj = cache.gets()
-      if (obj.loginStatus && obj.admin && obj.loginStatus.toString() === data.loginStatus.toString() && obj.admin === data.admin) {
-        callback(true)
-      }
+      url = state.host + '/auth'
+      Vue.http.post(url, data).then((res) => {
+        data = res.body
+        if (data.flag === false) {
+          callback(false)
+        } else {
+          cache.set('authToken', data.value)
+          cache.set('tid', data.id)
+          cacheObj = cache.gets()
+          if (cacheObj.authToken && cacheObj.tid) {
+            callback(true)
+          }
+        }
+      }, (res) => {
+        console.log(res)
+      })
     },
     logout (state, callback) {
       var arr, obj, cache
       cache = state.cache
-      arr = ['admin', 'loginStatus']
+      arr = ['authToken', 'tid']
       cache.removes(arr)
       obj = cache.gets()
-      if (!obj.admin && !obj.loginStatus) {
+      if (!obj.authToken) {
         callback(true)
       } else {
         callback(false)
       }
     },
     validGuard (state, callback) {
-      var loginStatus, cache
+      var authToken, cache
       cache = state.cache
-      loginStatus = cache.get('loginStatus')
-      if (loginStatus && loginStatus.toString() === '1') {
-        state.admin = cache.get('admin')
+      authToken = cache.get('authToken')
+      if (authToken) {
         callback(true)
       } else {
         callback(false)
@@ -53,6 +67,10 @@ const moduleLogin = {
   getters: {
     getAdmin: state => {
       return state.admin
+    },
+    getTid: state => {
+      state.tid = state.cache.get('tid')
+      return state.tid
     }
   },
   actions: {

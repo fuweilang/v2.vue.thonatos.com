@@ -60,7 +60,7 @@ const routes = [
     }]
   },
   {
-    path: '/releaselist/:id/:owner',
+    path: '/releaselist/:id/:tid',
     component: ReleaseFrame,
     meta: { needGuard: true },
     children: [{

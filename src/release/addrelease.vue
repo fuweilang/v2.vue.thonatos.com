@@ -8,19 +8,24 @@
     <el-card class="box-card">
 
       <el-form :model="releaseDetail" :rules="rules" ref="releaseDetail" label-width="200px" class="demo-ruleForm">
+        
         <el-form-item label="Release Version *" prop="version">
           <el-input v-model="releaseDetail.version"></el-input>
         </el-form-item>
+
         <el-form-item label="Release Summary *" prop="summary">
           <el-input v-model="releaseDetail.summary"></el-input>
         </el-form-item>
+
         <el-form-item label="Release Link(Url) *" prop="link">
           <el-input v-model="releaseDetail.link"></el-input>
         </el-form-item>
+
         <el-form-item label="Description">
           <textarea id="textarea" name="" value="releaseDetail.desc" cols="30" rows="10" style="visibility:hidden;">
           </textarea>
         </el-form-item>
+        
       </el-form>
 
       <div class="btn-box">
@@ -63,7 +68,12 @@ export default {
     }
 
     return {
-      releaseDetail: {},
+      releaseDetail: {
+        name: '',
+        repo: '',
+        visibility: 'internal',
+        desc: ''
+      },
       title: '',
       rules: {
         version: [
@@ -100,41 +110,32 @@ export default {
       this.$refs.releaseDetail.validate((valid) => {
         if (valid) {
           console.log('submit')
-          var query, rid, _this, opts, desc
+          var query, id, _this, opts, desc
           _this = this
           query = this.$route.query
-          rid = query.rid
-          opts = {}
+          id = query.id
+          opts = this.releaseDetail
           desc = tinymce.activeEditor.getContent()
-          if (!rid) {
-            opts = this.releaseDetail
-            opts.desc = desc
-            opts.projectid = query.pid
-            opts.maintainer = query.owner
+          opts.desc = desc
+          opts.pid = query.pid
+          if (!id) {
             this.$store.dispatch('addRelease', {
               opts: opts,
               action: function (data) {
                 _this.openPopup(data.msg)
-                if (data.code === 1) {
-                  _this.$router.push('/release/' + query.pid + '/' + query.owner)
+                if (data.bool) {
+                  _this.$router.push('/releaselist/' + query.pid + '/' + query.tid)
                 }
               }
             })
           } else {
-            var arr = ['version', 'summary', 'link']
-            for (var key in this.releaseDetail) {
-              if (arr.indexOf(key) >= 0) {
-                opts[key] = this.releaseDetail[key]
-              }
-            }
-            opts.desc = desc
-            opts.rid = rid
+            opts.id = id
             this.$store.dispatch('updateRelease', {
               opts: opts,
               action: function (data) {
                 _this.openPopup(data.msg)
-                if (data.code === 1) {
-                  _this.$router.push('/release/' + query.pid + '/' + query.owner)
+                if (data.bool === true) {
+                  _this.$router.push('/releaselist/' + query.pid + '/' + query.tid)
                 }
               }
             })
@@ -146,16 +147,17 @@ export default {
       })
     },
     loading: function () {
-      var query, rid
+      var query, id
       query = this.$route.query
-      rid = query.rid
-      if (!query.pid || !query.owner) {
+      id = query.id
+      if (!query.pid || !query.tid) {
         return
       }
-      if (rid) {
+      if (id) {
         this.title = 'Edit'
         this.$store.dispatch('getReleaseDetail', {
-          rid: rid,
+          pid: query.pid,
+          id: id,
           callback: function (data) {
             tinymce.EditorManager.init({
               selector: '#textarea',
@@ -167,7 +169,7 @@ export default {
         })
       } else {
         this.title = 'Add'
-        this.$store.dispatch('setReleaseEmpty')
+        this.$store.dispatch('setReleaseDetailEmpty')
         setTimeout(function () {
           tinymce.EditorManager.init({
             selector: '#textarea'

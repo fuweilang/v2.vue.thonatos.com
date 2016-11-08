@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="appframe">
     <el-row>
 
       <el-col :span="4">
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  #app {
+  .appframe {
     overflow: hidden;
     min-height: 100vh;
     background: #1f2f3d;

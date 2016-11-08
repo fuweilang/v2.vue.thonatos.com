@@ -1,61 +1,90 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
+import Cache from './lib/cache'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
+
+var getHeaders = function (state) {
+  var cache, authToken, headers
+  cache = state.cache
+  authToken = cache.get('authToken')
+  if (!authToken) {
+    return
+  }
+  headers = {
+    'authToken': authToken
+  }
+  return headers
+}
 
 const moduleRelease = {
   state: {
     projectlist: {},
     project: {
       name: '',
-      link: '',
-      tags: '',
+      repo: '',
       visibility: 'internal',
       desc: ''
     },
     releaselist: {},
-    releaseDetail: {}
+    releaseDetail: {
+      name: '',
+      repo: '',
+      visibility: 'internal',
+      desc: ''
+    },
+    cache: new Cache(),
+    host: 'http://192.168.3.60:3000/api'
   },
   mutations: {
     loadProjectlist (state, opts) {
-      var p, c, list
-      if (typeof opts === 'undefined' || opts == null) {
-        p = 12
-        c = 1
-      } else {
-        p = opts.p
-        c = opts.c
-      }
-      Vue.http.get('./api/project/gets?p=' + p + '&c=' + c).then((res) => {
+      var p, c, list, limit, offset, url, headers
+      p = opts.p || 12
+      c = opts.c || 1
+      limit = p
+      offset = p * (c - 1)
+      headers = getHeaders(state)
+      url = state.host + '/project?limit=' + limit + '&offset=' + offset
+      Vue.http.get(url, {
+        headers: headers
+      }).then((res) => {
         list = res.body
-        if (!list.projects) {
+        if (!list.rows) {
           return
         }
-        for (var i = 0; i < list.projects.length; i++) {
-          list.projects[i].deschide = true
+        if (list.rows.length <= 0) {
+          return
+        }
+        for (var i = 0; i < list.rows.length; i++) {
+          list.rows[i].deschide = true
         }
         state.projectlist = list
-        state.projectlist.pageTotal = list.pageCount * list.perPageNum
+        state.projectlist.pageTotal = list.count
+        state.projectlist.currentPage = parseInt(c)
       }, (res) => {
         console.log(res)
       })
     },
     addProject (state, opts) {
-      var data, params, callback
+      var data, params, callback, headers, url
       params = opts.opts
       callback = opts.action
-      Vue.http.post('./api/project/add', params).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project'
+      Vue.http.put(url, params, {
+        headers: headers
+      }).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 'created') {
           callback({
-            code: 1,
+            bool: true,
             msg: 'add project success'
           })
         } else {
           callback({
-            code: 0,
+            bool: false,
             msg: 'add project error'
           })
         }
@@ -64,19 +93,23 @@ const moduleRelease = {
       })
     },
     updateProject (state, opts) {
-      var data, params, callback
+      var data, params, callback, headers, url
       params = opts.opts
       callback = opts.action
-      Vue.http.post('./api/project/save', params).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project'
+      Vue.http.put(url, params, {
+        headers: headers
+      }).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 'updated') {
           callback({
-            code: 1,
+            bool: true,
             msg: 'update project success'
           })
         } else {
           callback({
-            code: 0,
+            bool: false,
             msg: 'update project error'
           })
         }
@@ -85,13 +118,14 @@ const moduleRelease = {
       })
     },
     getProject (state, opts) {
-      var data, id
+      var data, id, headers, url
       id = opts.id
-      Vue.http.get('./api/project/getProject?id=' + id).then((res) => {
+      url = state.host + '/project?id=' + id
+      headers = getHeaders(state)
+      Vue.http.get(url, {headers: headers}).then((res) => {
         data = res.body
-        if (data._id) {
+        if (data.id) {
           state.project = data
-          state.project.tags = state.project.tags.join(',')
         }
         if (opts.callback) {
           opts.callback(state.project)
@@ -103,26 +137,29 @@ const moduleRelease = {
     setProjectEmpty (state) {
       state.project = {
         name: '',
-        link: '',
-        tags: '',
+        repo: '',
         visibility: 'internal',
         desc: ''
       }
     },
     deleteProject (state, opts) {
-      var data, pid, callback
-      pid = opts.pid
+      var data, callback, url, headers
+      if (!opts.id) {
+        return
+      }
       callback = opts.action
-      Vue.http.post('./api/project/del', {pid: pid}).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project?id=' + opts.id
+      Vue.http.delete(url, { headers: headers }).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 1) {
           callback({
-            code: 1,
+            bool: true,
             msg: 'delete project success'
           })
         } else {
           callback({
-            code: 0,
+            bool: false,
             msg: 'delete project error'
           })
         }
@@ -131,25 +168,54 @@ const moduleRelease = {
       })
     },
     loadReleaselist (state, opts) {
-      var url, release
-      url = './api/release/gets?pid=' + opts.pid + '&p=' + opts.p + '&c=' + opts.c
-      Vue.http.get(url).then((res) => {
+      var url, release, headers, p, c, limit, offset
+      if (!opts.pid) {
+        return
+      }
+      p = opts.p || 12
+      c = opts.c
+      if (!c) {
+        c = 1
+      }
+      limit = p
+      offset = p * (c - 1)
+      url = state.host + '/project/' + opts.pid + '/release?pid=' + opts.pid + '&limit=' + limit + '&offset=' + offset
+      headers = getHeaders(state)
+      Vue.http.get(url, {
+        headers: headers
+      }).then((res) => {
         release = res.body
-        for (var i = 0; i < release.releases.length; i++) {
-          release.releases[i].deschide = true
+        if (release.count <= 0) {
+          moduleRelease.loadProjectlist(state, {
+            pid: opts.pid,
+            p: p,
+            c: c - 1
+          })
+          return
+        }
+        for (var i = 0; i < release.rows.length; i++) {
+          release.rows[i].deschide = true
         }
         state.releaselist = release
-        state.releaselist.pageTotal = release.pageCount * release.perPageNum
+        state.releaselist.pageTotal = release.count
       }, (res) => {
         console.log(res)
       })
     },
     getReleaseDetail (state, opts) {
-      var data, rid
-      rid = opts.rid
-      Vue.http.get('./api/release/getReleaseDetail?rid=' + rid).then((res) => {
+      var data, id, pid, headers, url
+      id = opts.id
+      pid = opts.pid
+      if (!id || !pid) {
+        return
+      }
+      headers = getHeaders(state)
+      url = state.host + '/project/' + pid + '/release?pid=' + pid + '&id=' + id
+      Vue.http.get(url, {
+        headers: headers
+      }).then((res) => {
         data = res.body
-        if (data._id) {
+        if (data.id) {
           state.releaseDetail = data
         }
         if (opts.callback) {
@@ -160,44 +226,60 @@ const moduleRelease = {
       })
     },
     updateRelease (state, opts) {
-      var data, callback
+      var data, callback, headers, url
       callback = opts.action
       opts = opts.opts
-      Vue.http.post('./api/release/updateRelease', opts).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project/' + opts.pid + '/release'
+      Vue.http.put(url, opts, {
+        headers: headers
+      }).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 'updated') {
           callback({
-            code: 1,
-            msg: 'update release success'
+            bool: true,
+            msg: '修改成功'
           })
         } else {
           callback({
-            code: 0,
-            msg: 'update release error'
+            bool: false,
+            msg: '修改失败'
           })
         }
       }, (res) => {
         console.log(res)
       })
     },
-    setReleaseEmpty (state) {
-      state.releaseDetail = {}
+    setReleaseListEmpty (state) {
+      state.releaselist = {}
+    },
+    setReleaseDetailEmpty (state) {
+      state.releaseDetail = {
+        name: '',
+        repo: '',
+        visibility: 'internal',
+        desc: ''
+      }
     },
     addRelease (state, opts) {
-      var callback, data
+      var callback, data, headers, url
       callback = opts.action
       opts = opts.opts
-      Vue.http.post('./api/release/addRelease', opts).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project/' + opts.pid + '/release'
+      Vue.http.put(url, opts, {
+        headers: headers
+      }).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 'created') {
           callback({
-            code: 1,
-            msg: 'add release success'
+            bool: true,
+            msg: '添加成功'
           })
         } else {
           callback({
-            code: 0,
-            msg: 'add release error'
+            bool: false,
+            msg: '添加失败'
           })
         }
       }, (res) => {
@@ -205,23 +287,26 @@ const moduleRelease = {
       })
     },
     deleteRelease (state, opts) {
-      var callback, data, rid
+      var callback, data, id, pid, url, headers
       callback = opts.action
-      rid = opts.rid
-      if (!rid) {
+      id = opts.id
+      pid = opts.pid
+      if (!id || !pid) {
         return
       }
-      Vue.http.post('./api/release/deleteRelease', {rid: rid}).then((res) => {
+      headers = getHeaders(state)
+      url = state.host + '/project/' + opts.pid + '/release?pid=' + pid + '&id=' + id
+      Vue.http.delete(url, {headers: headers}).then((res) => {
         data = res.body
-        if (data.code === '200') {
+        if (data === 1) {
           callback({
-            code: 1,
-            msg: 'add release success'
+            bool: true,
+            msg: '删除成功'
           })
         } else {
           callback({
-            code: 0,
-            msg: 'add release error'
+            bool: false,
+            msg: '删除失败'
           })
         }
       }, (res) => {
@@ -271,8 +356,11 @@ const moduleRelease = {
     updateRelease (context, opts) {
       context.commit('updateRelease', opts)
     },
-    setReleaseEmpty (context) {
-      context.commit('setReleaseEmpty')
+    setReleaseListEmpty (context) {
+      context.commit('setReleaseListEmpty')
+    },
+    setReleaseDetailEmpty (context) {
+      context.commit('setReleaseDetailEmpty')
     },
     addRelease (context, opts) {
       context.commit('addRelease', opts)
