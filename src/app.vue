@@ -3,7 +3,6 @@
     <router-view></router-view>
   </div>
 </template>
-
 <style lang="less">
   html,
   body {
@@ -11,6 +10,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
   }
   * {
     font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
@@ -35,12 +35,12 @@
     font-weight:normal;
   }
   .clearfix:after {
-    content:"\200B"; 
-    display:block; 
-    height:0; 
-    clear:both; 
+    content:"\200B";
+    display:block;
+    height:0;
+    clear:both;
   }
-  .clearfix { 
-    *zoom:1; 
+  .clearfix {
+    *zoom:1;
   }
 </style>

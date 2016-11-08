@@ -4,11 +4,11 @@
     <el-card class="login-box-card">
 
       <el-form :model="loginMsg" :rules="rules" ref="loginMsg" label-width="100px" class="demo-ruleForm">
-        
+
         <el-form-item label="jobnumber" prop="jobnumber">
           <el-input v-model="loginMsg.jobnumber" @keyup.native.prevent="passwordKeyup($event)"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="password" prop="password">
           <el-input v-model="loginMsg.password" type="password" @keyup.native.prevent="passwordKeyup($event)"></el-input>
         </el-form-item>
@@ -85,7 +85,6 @@ export default {
   }
 }
 </script>
-
 <style lang="less" scoped>
   .applogin {
     overflow: hidden;

@@ -12,11 +12,16 @@ import Addproject from './release/addproject'
 import More from './release/more'
 import Releaselist from './release/releaselist'
 import Addrelease from './release/addrelease'
+import Index from './index/index'
 
 Vue.use(Element)
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    component: Index
+  },
   {
     path: '/login',
     component: Login
@@ -76,7 +81,7 @@ const routes = [
       }
     }]
   },
-  { path: '/', redirect: '/projects/12/1' },
+  { path: '/projects', redirect: '/projects/12/1' },
   { path: '*', redirect: '/' }
 ]
 

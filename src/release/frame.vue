@@ -45,11 +45,9 @@
         </el-row>
 
       </el-col>
-      
       <el-col :span="20">
         <div class="grid-content">
           <div class="router-content">
-          
             <router-view name='content'></router-view>
 
           </div>
@@ -76,7 +74,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .appframe {  
+  .appframe {
     overflow: hidden;
     min-height: 100vh;
     background: #1f2f3d;
@@ -169,7 +167,6 @@ export default {
         }
       }
     }
-    
     .router-content{
       padding: 30px;
     }
