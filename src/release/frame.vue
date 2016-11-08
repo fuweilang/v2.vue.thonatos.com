@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="appframe">
     <el-row>
 
       <el-col :span="4">
@@ -28,7 +28,7 @@
               <el-submenu index="1">
                 <template slot="title"><i class="el-icon-message"></i>Projects</template>
                 <el-menu-item index="1-1">
-                  <router-link to="/list" class="link-text">list</router-link>
+                  <router-link to="/projects" class="link-text">list</router-link>
                 </el-menu-item>
                 <el-menu-item index="1-2">
                   <router-link to="/addproject" class="link-text">add</router-link>
@@ -75,8 +75,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-  #app {  
+<style lang="less" scoped>
+  .appframe {  
     overflow: hidden;
     min-height: 100vh;
     background: #1f2f3d;

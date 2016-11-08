@@ -6,7 +6,8 @@ var moment = require('moment');
 
 var host = "http://developers.insta360.com/api"
 var headers = {
-	'Authentication-Token': 'cda36892924332e85fb47f4ea2f19724'
+	// 'Authentication-Token': 'cda36892924332e85fb47f4ea2f19724',
+	'authToken': null
 }
 
 var requestFn = function (type, url, opts, callback) {
@@ -34,19 +35,47 @@ var requestFn = function (type, url, opts, callback) {
 }
 
 module.exports = function(app) {
+		router.route('/auth')
+			.post(function(req, res) {
+				var opts = req.body
+				if(!opts) {
+					return
+				}
+				if(!opts.jobnumber || !opts.password) {
+					return
+				}
+				host = "http://192.168.3.60:3000/api"
+				url = host + '/auth'
+				requestFn('post', url, opts, function(data) {
+					console.log(data)
+					if(data.value) {
+						headers.authToken = data.value
+					}
+					res.json(data)
+				})
+			})
+
 		router.route('/project/gets')
 			.get(function(req, res) {
 				var p, c, created;
 				p = req.query.p
 				c = req.query.c
 				p = !!p ? p : 12
-				c = !!c ? c : 1
+				c = !!c ? c : 0
 				opts = {
 					p: p,
 					c: c
 				}
-				url = host + '/project/gets'
+				opts = {
+					limit: p,
+					offset: c
+				}
+				console.log(opts)
+				host = "http://192.168.3.60:3000/api"
+				url = host + '/project'
 				requestFn('GET', url, opts, function(data) {
+					console.log(data)
+					return
 					for (var i = 0; i < data.projects.length; i++) {
 						created = data.projects[i].createdAt
 						data.projects[i].createdAt = moment(created).format()

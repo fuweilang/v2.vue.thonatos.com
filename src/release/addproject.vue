@@ -8,15 +8,15 @@
     <el-card class="box-card">
 
       <el-form :model="project" :rules="rules" ref="project" label-width="200px" class="demo-ruleForm">
+
         <el-form-item label="Project Name *" prop="name">
           <el-input v-model="project.name"></el-input>
         </el-form-item>
-        <el-form-item label="Project Link(Url/Repo) *" prop="link">
-          <el-input v-model="project.link"></el-input>
+
+        <el-form-item label="Project Link(Url/Repo) *" prop="repo">
+          <el-input v-model="project.repo"></el-input>
         </el-form-item>
-        <el-form-item label="Project Tags" prop="tags">
-          <el-input v-model="project.tags"></el-input>
-        </el-form-item>
+
         <el-form-item label="Visibility" prop="visibility">
           <el-select v-model="project.visibility" placeholder="Internal">
             <el-option label="Internal" value="internal"></el-option>
@@ -24,10 +24,12 @@
             <el-option label="Public" value="public"></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item label="Description *">
           <textarea id="textarea" name="" cols="30" rows="10" style="visibility:hidden;">
           </textarea>
         </el-form-item>
+        
       </el-form>
 
       <div class="btn-box">
@@ -70,8 +72,7 @@ export default {
     return {
       project: {
         name: '',
-        link: '',
-        tags: '',
+        repo: '',
         visibility: 'internal',
         desc: ''
       },
@@ -82,7 +83,7 @@ export default {
           { message: '请填写此字段', trigger: 'blur' },
           { validator: validaeFn }
         ],
-        link: [
+        repo: [
           { message: '请填写此字段', trigger: 'blur' },
           { validator: validaeFn2 }
         ]
@@ -122,14 +123,14 @@ export default {
               opts: opts,
               action: function (data) {
                 _this.openPopup(data.msg)
-                if (data.code === 1) {
-                  _this.$router.push('/list')
+                if (data.bool) {
+                  _this.$router.push('/projects')
                 }
               }
             })
           } else {
             var keys
-            keys = ['name', 'tags', 'visibility', 'link']
+            keys = ['name', 'visibility', 'repo']
             opts.desc = desc
             for (var key in this.project) {
               if (keys.indexOf(key) >= 0) {
@@ -143,8 +144,8 @@ export default {
               opts: opts,
               action: function (data) {
                 _this.openPopup(data.msg)
-                if (data.code === 1) {
-                  _this.$router.push('/list')
+                if (data.bool) {
+                  _this.$router.push('/projects')
                 }
               }
             })

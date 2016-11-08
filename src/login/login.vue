@@ -1,18 +1,26 @@
 <template>
-  <div id="app">
+  <div class="applogin">
+
     <el-card class="login-box-card">
+
       <el-form :model="loginMsg" :rules="rules" ref="loginMsg" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="username *" prop="username">
-          <el-input v-model="loginMsg.username"></el-input>
+        
+        <el-form-item label="jobnumber" prop="jobnumber">
+          <el-input v-model="loginMsg.jobnumber" @keyup.native.prevent="passwordKeyup($event)"></el-input>
         </el-form-item>
-        <el-form-item label="password *" prop="password">
-          <el-input v-model="loginMsg.password" type="password"></el-input>
+        
+        <el-form-item label="password" prop="password">
+          <el-input v-model="loginMsg.password" type="password" @keyup.native.prevent="passwordKeyup($event)"></el-input>
         </el-form-item>
+
       </el-form>
+
       <div class="btn-box">
         <el-button type="primary" class="login" @click.native.prevent="loginFn">Log in</el-button>
       </div>
+
     </el-card>
+
   </div>
 </template>
 
@@ -21,18 +29,23 @@ export default {
   name: 'login',
 
   methods: {
+    passwordKeyup: function (e) {
+      if (e.keyCode === 13) {
+        this.loginFn()
+      }
+    },
     loginFn: function () {
       this.$refs.loginMsg.validate((valid) => {
         var _this = this
         if (valid) {
           this.$store.dispatch('login', {
             data: {
-              admin: 'fuwl90@163.com',
-              loginStatus: 1
+              jobnumber: _this.loginMsg.jobnumber,
+              password: _this.loginMsg.password
             },
             callback: function (bool) {
               if (bool) {
-                _this.$router.push('/list')
+                _this.$router.push('/projects')
               }
             }
           })
@@ -55,11 +68,11 @@ export default {
     return {
       msg: '2222',
       loginMsg: {
-        username: '',
+        jobnumber: '',
         password: ''
       },
       rules: {
-        username: [
+        jobnumber: [
           { message: '请填写此字段', trigger: 'blur' },
           { validator: validaeFn }
         ],
@@ -73,7 +86,12 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+  .applogin {
+    overflow: hidden;
+    min-height: 100vh;
+    background: #1f2f3d;
+  }
   .login-box-card {
     width: 500px;
     margin: 200px auto;

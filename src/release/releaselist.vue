@@ -6,22 +6,20 @@
     </div>
 
     <el-card class="box-card">
-      <div class="btn-box clearfix" v-if="owner === admin">
+      <div class="btn-box clearfix" v-if="cacheTid === tid">
         <el-button type="primary">
-          <router-link :to="{ path: '/addrelease', query: { pid: pid, owner: owner }}">
+          <router-link :to="{ path: '/addrelease', query: { pid: pid, tid: tid }}">
             <span>Add Release</span>
           </router-link>
         </el-button>
       </div>
 
       <ul class="datatable">
+
         <li class="datatable-title">
           <el-row>
-            <el-col :span="2">
+            <el-col :span="4">
               <span>Version</span>
-            </el-col>
-            <el-col :span="5">
-              <span>Owner</span>
             </el-col>
             <el-col :span="5">
               <span>Summary</span>
@@ -29,22 +27,20 @@
             <el-col :span="5">
               <span>Created</span>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="4">
               <span>Link</span>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
               <span>#Edit</span>
             </el-col>
           </el-row>
         </li>
-        <li v-for="item in releaselist.releases" class="data">
+
+        <li v-for="item in releaselist.rows" class="data">
           <div class="item" @click="item.deschide=!item.deschide">
             <el-row>
-              <el-col :span="2">
+              <el-col :span="4">
                 <span>{{ item.version }}</span>
-              </el-col>
-              <el-col :span="5">
-                <span>{{ owner }}</span>
               </el-col>
               <el-col :span="5">
                 <span v-if="!!item.summary">{{ item.summary }}</span>
@@ -54,21 +50,21 @@
                 <span v-if="!!item.createdAt">{{ item.createdAt }}</span>
                 <span v-else> -- </span>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="4">
                 <el-button size="mini" type="primary">
                   <a :href="item.link" class="link-a">Download</a>
                 </el-button>
               </el-col>
-              <el-col :span="4">
-                <div v-if="owner === admin">
+              <el-col :span="5">
+                <div>
                   <el-button size="mini" type="primary">
-                    <router-link :to="{ path: '/addrelease', query: { pid: pid, rid: item._id, owner:owner }}" class="edit-btn">
+                    <router-link :to="{ path: '/addrelease', query: { pid: pid, id: item.id, tid:tid }}" class="edit-btn">
                       <i class="el-icon-edit"></i>
                       <span>Edit</span>
                     </router-link>
                   </el-button>
                   <el-button size="mini" type="primary">
-                    <div @click="openPopup(item._id)">
+                    <div @click="openPopup(item.id)">
                       <i class="el-icon-delete"></i>
                       <span>Delete</span>
                     </div>
@@ -80,6 +76,7 @@
           <div class="detail" v-bind:class="{ 'hide': item.deschide}" v-html="item.desc">
           </div>
         </li>
+
       </ul>
 
       <div class="paging">
@@ -106,7 +103,7 @@ export default {
   computed: {
     ...mapGetters({
       releaselist: 'releaselist',
-      admin: 'getAdmin'
+      cacheTid: 'getTid'
     })
   },
 
@@ -115,26 +112,26 @@ export default {
       'loadReleaselist'
     ]),
     handleCurrentChange: function (index) {
+      this.c = parseInt(index)
       this.$store.dispatch('loadReleaselist', {
         p: 12,
-        c: parseInt(index),
+        c: this.c,
         pid: this.pid
       })
     },
     openPopup: function (id) {
-      var _this, rid
-      rid = id
-      _this = this
-      if (!rid) {
+      var _this = this
+      if (!id || !this.pid) {
         return
       }
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('deleteRelease', {
-          rid: rid,
+          id: id,
+          pid: _this.pid,
           action: function (data) {
-            if (data.code === 1) {
+            if (data.bool) {
               _this.$message({
                 type: 'success',
                 message: data.msg
@@ -156,14 +153,15 @@ export default {
       })
     },
     loading: function () {
-      var pid, owner
+      var pid, tid
+      this.$store.dispatch('setReleaseListEmpty')
       pid = this.$route.params.id
-      owner = this.$route.params.owner
-      if (!pid && !owner) {
+      tid = this.$route.params.tid
+      if (!pid && !tid) {
         return
       }
       this.pid = pid
-      this.owner = owner
+      this.tid = tid
       this.$store.dispatch('loadReleaselist', {
         pid: pid,
         p: 12,
@@ -178,9 +176,11 @@ export default {
   data () {
     return {
       releaselist: {},
-      owner: '',
+      tid: '',
       pid: '',
-      admin: null
+      cacheTid: null,
+      p: 12,
+      c: 1
     }
   }
 }

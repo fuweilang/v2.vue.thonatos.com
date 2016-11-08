@@ -7,13 +7,14 @@
 
     <el-card class="box-card">
       <ul class="datatable">
+
         <li class="datatable-title">
           <el-row>
-            <el-col :span="5">
+            <el-col :span="4">
               <span>Name</span>
             </el-col>
-            <el-col :span="5">
-              <span>Owner</span>
+            <el-col :span="6">
+              <span>Repo</span>
             </el-col>
             <el-col :span="6">
               <span>Created</span>
@@ -26,43 +27,51 @@
             </el-col>
           </el-row>
         </li>
-        <li v-for="item in projectlist.projects" class="data">
+
+        <li v-for="item in projectlist.rows" class="data">
           <div class='item' @click="item.deschide=!item.deschide">
             <el-row>
-              <el-col :span="5">
-                <router-link :to="'/releaselist/'+item._id + '/' + item.owner" class='link'>{{ item.name }}</router-link>
+
+              <el-col :span="4">
+                <router-link :to="'/releaselist/'+item.id + '/' + item.tid" class='link'>{{ item.name }}</router-link>
               </el-col>
-              <el-col :span="5">
-                <span>{{ item.owner }}</span>
+
+              <el-col :span="6">
+                <span>{{ item.repo }}</span>
               </el-col>
+
               <el-col :span="6">
                 <span v-if="!!item.createdAt">{{ item.createdAt }}</span>
                 <span v-else> -- </span>
               </el-col>
+
               <el-col :span="3">
                 <span>{{ item.visibility }}</span>
               </el-col>
+
               <el-col :span="5">
-                <div v-if="item.owner === admin">
+                <div v-if="item.tid === parseInt(tid)">
                   <el-button size="mini" type="primary" >
-                    <router-link :to="{ path: '/addproject', query: { id: item._id }}" class="edit-btn">
+                    <router-link :to="{ path: '/addproject', query: { id: item.id }}" class="edit-btn">
                       <i class="el-icon-edit"></i>
                       <span>Edit</span>
                     </router-link>
                   </el-button>
                   <el-button size="mini" type="primary">
-                    <div @click="openPopup(item._id)">
+                    <div @click="openPopup(item.id, $event)">
                       <i class="el-icon-delete"></i>
                       <span>Delete</span>
                     </div>
                   </el-button>
                 </div>
               </el-col>
+
             </el-row>
           </div>
           <div class="detail" :class="{ 'hide': item.deschide}" v-html="item.desc">
           </div>
         </li>
+        
       </ul>
 
       <div class="paging">
@@ -98,25 +107,24 @@ export default {
       var url = '/projects/12/' + index
       this.$router.push(url)
     },
-    openPopup: function (id) {
-      var _this, pid
-      pid = id
-      _this = this
-      if (!pid) {
+    openPopup: function (id, e) {
+      e.preventDefault()
+      var _this = this
+      if (!id) {
         return
       }
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('deleteProject', {
-          pid: pid,
+          id: id,
           action: function (data) {
-            if (data.code === 1) {
+            if (data.bool) {
               _this.$message({
                 type: 'success',
                 message: data.msg
               })
-              _this.$router.push('/projects')
+              _this.loading()
             } else {
               _this.$message({
                 type: 'error',
@@ -150,7 +158,7 @@ export default {
   computed: {
     ...mapGetters({
       projectlist: 'projectlist',
-      admin: 'getAdmin'
+      tid: 'getTid'
     })
   },
 
@@ -169,7 +177,7 @@ export default {
       projectlist: {},
       p: 12,
       c: 1,
-      admin: null
+      tid: null
     }
   }
 }
@@ -218,6 +226,9 @@ export default {
           padding: 10px 18px;
           border-top: 1px solid #e0e6ed;
           background: #fafafa;
+          p {
+            margin: 0;
+          }
           &.hide {
             display: none;
           }
