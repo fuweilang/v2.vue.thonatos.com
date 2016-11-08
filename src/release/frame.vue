@@ -4,29 +4,12 @@
 
       <el-col :span="4">
 
-        <div class="nav_title" style="border: 0;">
-          <a href="/" class="site_title">
-            <img src="./img/logo.png" alt="">
-            <span>Insta360-DEV</span>
-          </a>
-        </div>
-
-        <div class="logo">
-          <img src="./img/user.png" alt="">
-          <div class="info">
-            <p>welcome,</p>
-            <h2>
-              fuwl90
-              <span @click='logout'>退出</span>
-            </h2>
-          </div>
-        </div>
-
         <el-row class="tac">
           <el-col :span="24">
             <el-menu class="el-menu-vertical-demo" theme="dark" prop>
+
               <el-submenu index="1">
-                <template slot="title"><i class="el-icon-message"></i>Projects</template>
+                <template slot="title"><i class="el-icon-message"></i>Release</template>
                 <el-menu-item index="1-1">
                   <router-link to="/projects" class="link-text">list</router-link>
                 </el-menu-item>
@@ -34,12 +17,18 @@
                   <router-link to="/addproject" class="link-text">add</router-link>
                 </el-menu-item>
               </el-submenu>
+
               <el-submenu index="2">
                 <template slot="title"><i class="el-icon-menu"></i>System</template>
                 <el-menu-item index="2-1">
                   <router-link to="/more" class="link-text">more</router-link>
                 </el-menu-item>
+
+                <el-menu-item index="2-2">
+                  <span class="link-text" @click='logout'>退出</span>
+                </el-menu-item>
               </el-submenu>
+
             </el-menu>
           </el-col>
         </el-row>
@@ -154,7 +143,7 @@ export default {
       position: relative;
       width: 100%;
       min-height: 100vh;
-      background: #eff2f7;
+      background: #fff;
       .footer {
         width: 100%;
         padding: 15px;
@@ -166,9 +155,6 @@ export default {
           font-weight: 400;
         }
       }
-    }
-    .router-content{
-      padding: 30px;
     }
   }
 </style>

@@ -1,28 +1,25 @@
 <template>
   <div class="list">
 
-    <div class="datalist-title clearfix">
-      <h3>Project List</h3>
-    </div>
-    <el-card class="box-card">
+    <el-card class="box-card project-card">
       <ul class="datatable">
 
         <li class="datatable-title">
           <el-row>
             <el-col :span="4">
-              <span>Name</span>
+              <span>项目</span>
             </el-col>
             <el-col :span="6">
               <span>Repo</span>
             </el-col>
             <el-col :span="6">
-              <span>Created</span>
+              <span>创建时间</span>
             </el-col>
             <el-col :span="3">
-              <span>Visibility</span>
+              <span>可见性</span>
             </el-col>
             <el-col :span="5">
-              <span>#Edit</span>
+              <span>编辑</span>
             </el-col>
           </el-row>
         </li>
@@ -78,7 +75,7 @@
           @currentchange="handleCurrentChange"
           :current-page="projectlist.currentPage"
           :page-size="12"
-          layout="prev, pager, next, jumper"
+          layout="prev, pager, next"
           :total="projectlist.pageTotal">
         </el-pagination>
       </div>
@@ -186,7 +183,11 @@ export default {
 <style scoped lang="less" >
   @color: #73879C;
   .list {
-    padding-right: 50px;
+    .project-card {
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
     .datalist-title {
       padding: 10px 20px 10px 10px;
       h3 {
