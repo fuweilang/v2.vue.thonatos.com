@@ -32,7 +32,7 @@ export default {
             },
             callback: function (bool) {
               if (bool) {
-                _this.$router.push('/list')
+                _this.$router.push('/projects')
               }
             }
           })
@@ -74,6 +74,9 @@ export default {
 </script>
 
 <style lang="less">
+  .bg-blue{
+      background: #324057;
+  }
   .login-box-card {
     width: 500px;
     margin: 200px auto;

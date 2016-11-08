@@ -28,7 +28,7 @@
               <el-submenu index="1">
                 <template slot="title"><i class="el-icon-message"></i>Projects</template>
                 <el-menu-item index="1-1">
-                  <router-link to="/list" class="link-text">list</router-link>
+                  <router-link to="/projects" class="link-text">list</router-link>
                 </el-menu-item>
                 <el-menu-item index="1-2">
                   <router-link to="/addproject" class="link-text">add</router-link>
@@ -45,11 +45,9 @@
         </el-row>
 
       </el-col>
-      
       <el-col :span="20">
         <div class="grid-content">
           <div class="router-content">
-          
             <router-view name='content'></router-view>
 
           </div>
@@ -75,8 +73,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-  #app {  
+<style lang="less" scoped>
+  #app {
     overflow: hidden;
     min-height: 100vh;
     background: #1f2f3d;
@@ -169,7 +167,6 @@ export default {
         }
       }
     }
-    
     .router-content{
       padding: 30px;
     }

@@ -4,7 +4,6 @@
     <div class="datalist-title clearfix">
       <h3>Project List</h3>
     </div>
-
     <el-card class="box-card">
       <ul class="datatable">
         <li class="datatable-title">
@@ -176,7 +175,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style scoped lang="less" >
   @color: #73879C;
   .list {
     padding-right: 50px;
