@@ -81,16 +81,20 @@ const moduleRelease = {
         if (data === 'created') {
           callback({
             bool: true,
-            msg: 'add project success'
+            msg: '添加成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'add project error'
+            msg: '添加失败'
           })
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     updateProject (state, opts) {
@@ -106,16 +110,19 @@ const moduleRelease = {
         if (data === 'updated') {
           callback({
             bool: true,
-            msg: 'update project success'
+            msg: '修改成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'update project error'
+            msg: '修改失败'
           })
         }
       }, (res) => {
-        console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     getProject (state, opts) {
@@ -158,16 +165,19 @@ const moduleRelease = {
         if (data === 1) {
           callback({
             bool: true,
-            msg: 'delete project success'
+            msg: '删除成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'delete project error'
+            msg: '删除失败'
           })
         }
       }, (res) => {
-        console.log(res)
+        callback({
+          bool: false,
+          msg: '删除失败'
+        })
       })
     },
     loadReleaselist (state, opts) {
@@ -246,6 +256,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     setReleaseListEmpty (state) {
@@ -282,6 +296,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '添加失败'
+        })
       })
     },
     deleteRelease (state, opts) {
@@ -309,6 +327,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '删除失败'
+        })
       })
     }
   },
