@@ -205,6 +205,11 @@ export default {
       li {
         display: block;
         border-top: 1px solid #e0e6ed;
+        &.datatable-title {
+          font-weight: bold;
+          background: #eff2f7;
+          border-top: 0;
+        }
         .item {
           height: 41px;
           font-size: 13px;
@@ -214,11 +219,6 @@ export default {
         .item:hover {
           background: rgb(201, 229, 245);
         }
-        &.datatable-title {
-          font-weight: bold;
-          background: #eff2f7;
-          border-top: 0;
-        }
         .detail {
           display: block;
           font-size: 13px;
@@ -226,9 +226,6 @@ export default {
           padding: 10px 18px;
           border-top: 1px solid #e0e6ed;
           background: #fafafa;
-          p {
-            margin: 0;
-          }
           &.hide {
             display: none;
           }

@@ -48,6 +48,7 @@ const moduleRelease = {
       headers = getHeaders(state)
       url = state.host + '/project?limit=' + limit + '&offset=' + offset
       Vue.http.get(url, {
+        emulateJSON: true,
         headers: headers
       }).then((res) => {
         list = res.body
@@ -122,7 +123,9 @@ const moduleRelease = {
       id = opts.id
       url = state.host + '/project?id=' + id
       headers = getHeaders(state)
-      Vue.http.get(url, {headers: headers}).then((res) => {
+      Vue.http.get(url, {
+        headers: headers
+      }).then((res) => {
         data = res.body
         if (data.id) {
           state.project = data
@@ -181,18 +184,15 @@ const moduleRelease = {
       offset = p * (c - 1)
       url = state.host + '/project/' + opts.pid + '/release?pid=' + opts.pid + '&limit=' + limit + '&offset=' + offset
       headers = getHeaders(state)
+      console.log(moduleRelease)
       Vue.http.get(url, {
         headers: headers
       }).then((res) => {
         release = res.body
         if (release.count <= 0) {
-          moduleRelease.loadProjectlist(state, {
-            pid: opts.pid,
-            p: p,
-            c: c - 1
-          })
           return
         }
+        console.log(release)
         for (var i = 0; i < release.rows.length; i++) {
           release.rows[i].deschide = true
         }
