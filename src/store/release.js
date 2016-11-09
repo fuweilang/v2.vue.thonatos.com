@@ -48,6 +48,7 @@ const moduleRelease = {
       headers = getHeaders(state)
       url = state.host + '/project?limit=' + limit + '&offset=' + offset
       Vue.http.get(url, {
+        emulateJSON: true,
         headers: headers
       }).then((res) => {
         list = res.body
@@ -80,16 +81,20 @@ const moduleRelease = {
         if (data === 'created') {
           callback({
             bool: true,
-            msg: 'add project success'
+            msg: '添加成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'add project error'
+            msg: '添加失败'
           })
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     updateProject (state, opts) {
@@ -105,16 +110,19 @@ const moduleRelease = {
         if (data === 'updated') {
           callback({
             bool: true,
-            msg: 'update project success'
+            msg: '修改成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'update project error'
+            msg: '修改失败'
           })
         }
       }, (res) => {
-        console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     getProject (state, opts) {
@@ -122,7 +130,9 @@ const moduleRelease = {
       id = opts.id
       url = state.host + '/project?id=' + id
       headers = getHeaders(state)
-      Vue.http.get(url, {headers: headers}).then((res) => {
+      Vue.http.get(url, {
+        headers: headers
+      }).then((res) => {
         data = res.body
         if (data.id) {
           state.project = data
@@ -155,16 +165,19 @@ const moduleRelease = {
         if (data === 1) {
           callback({
             bool: true,
-            msg: 'delete project success'
+            msg: '删除成功'
           })
         } else {
           callback({
             bool: false,
-            msg: 'delete project error'
+            msg: '删除失败'
           })
         }
       }, (res) => {
-        console.log(res)
+        callback({
+          bool: false,
+          msg: '删除失败'
+        })
       })
     },
     loadReleaselist (state, opts) {
@@ -186,11 +199,6 @@ const moduleRelease = {
       }).then((res) => {
         release = res.body
         if (release.count <= 0) {
-          moduleRelease.loadProjectlist(state, {
-            pid: opts.pid,
-            p: p,
-            c: c - 1
-          })
           return
         }
         for (var i = 0; i < release.rows.length; i++) {
@@ -248,6 +256,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '修改失败'
+        })
       })
     },
     setReleaseListEmpty (state) {
@@ -284,6 +296,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '添加失败'
+        })
       })
     },
     deleteRelease (state, opts) {
@@ -311,6 +327,10 @@ const moduleRelease = {
         }
       }, (res) => {
         console.log(res)
+        callback({
+          bool: false,
+          msg: '删除失败'
+        })
       })
     }
   },

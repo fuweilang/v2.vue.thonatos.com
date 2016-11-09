@@ -7,6 +7,7 @@ import moduleLogin from './login'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
+Vue.http.options.emulateJSON = true
 
 const store = new Vuex.Store({
   modules: {
