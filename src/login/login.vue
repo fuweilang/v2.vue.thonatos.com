@@ -93,7 +93,14 @@ export default {
   }
   .login-box-card {
     width: 500px;
-    margin: 200px auto;
+    height: 194px;
+    padding-right: 25px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: -250px;
+    bottom: 0;
+    margin: auto;
   }
   .btn-box {
     text-align: center;

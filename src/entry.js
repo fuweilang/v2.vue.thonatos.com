@@ -9,7 +9,6 @@ import Login from './login/login'
 import ReleaseFrame from './release/frame'
 import Projects from './release/projects'
 import Addproject from './release/addproject'
-import More from './release/more'
 import Releaselist from './release/releaselist'
 import Addrelease from './release/addrelease'
 import Index from './index/index'
@@ -45,17 +44,6 @@ const routes = [
       path: '/',
       components: {
         content: Addproject
-      }
-    }]
-  },
-  {
-    path: '/more',
-    component: ReleaseFrame,
-    meta: { needGuard: true },
-    children: [{
-      path: '/',
-      components: {
-        content: More
       }
     }]
   },

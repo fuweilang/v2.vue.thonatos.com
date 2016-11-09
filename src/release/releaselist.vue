@@ -1,11 +1,8 @@
 <template>
   <div class="list">
 
-    <div class="datalist-title clearfix">
-      <h3>Release List</h3>
-    </div>
+    <div class="project-card">
 
-    <el-card class="box-card">
       <div class="btn-box clearfix" v-if="cacheTid === tid">
         <el-button type="primary">
           <router-link :to="{ path: '/addrelease', query: { pid: pid, tid: tid }}">
@@ -19,19 +16,19 @@
         <li class="datatable-title">
           <el-row>
             <el-col :span="4">
-              <span>Version</span>
+              <span>版本</span>
             </el-col>
             <el-col :span="5">
-              <span>Summary</span>
+              <span>概要</span>
             </el-col>
             <el-col :span="5">
-              <span>Created</span>
+              <span>创建时间</span>
             </el-col>
             <el-col :span="4">
               <span>Link</span>
             </el-col>
             <el-col :span="5">
-              <span>#Edit</span>
+              <span>编辑</span>
             </el-col>
           </el-row>
         </li>
@@ -84,12 +81,12 @@
           @currentchange="handleCurrentChange"
           :current-page="releaselist.currentPage"
           :page-size="12"
-          layout="prev, pager, next, jumper"
+          layout="prev, pager, next"
           :total="releaselist.pageTotal">
         </el-pagination>
       </div>
 
-    </el-card>
+    </div>
 
   </div>
 </template>
@@ -191,20 +188,10 @@ export default {
   @color: #73879C;
   .list {
     padding-right: 50px;
-    .datalist-title {
-      padding: 10px 20px 10px 10px;
-      h3 {
-        float: left;
-        height: 30px;
-        line-height: 30px;
-        font-size: 17px;
-        color: @color;
-      }
-    }
     .btn-box {
-      padding: 0px 10px 20px 10px;
+      padding-bottom: 20px;
       button {
-        float: right;
+        float: left;
         a {
           color: #fff;
         }
@@ -260,7 +247,7 @@ export default {
     .paging {
       height: 30px;
       margin-top: 10px;
-      text-align: right;
+      text-align: center;
     }
   }
 </style>
