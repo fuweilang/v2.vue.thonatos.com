@@ -1,7 +1,7 @@
 <template>
   <div class="list">
 
-    <el-card class="box-card project-card">
+    <div class="project-card">
       <ul class="datatable">
 
         <li class="datatable-title">
@@ -80,7 +80,7 @@
         </el-pagination>
       </div>
 
-    </el-card>
+    </div>
 
   </div>
 </template>
@@ -183,11 +183,6 @@ export default {
 <style scoped lang="less" >
   @color: #73879C;
   .list {
-    .project-card {
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-    }
     .datalist-title {
       padding: 10px 20px 10px 10px;
       h3 {
@@ -250,7 +245,7 @@ export default {
     .paging {
       height: 30px;
       margin-top: 10px;
-      text-align: right;
+      text-align: center;
     }
   }
 </style>

@@ -1,11 +1,7 @@
 <template>
   <div class="add">
 
-    <div class="title clearfix">
-      <h3>Release {{ title }}</h3>
-    </div>
-
-    <el-card class="box-card">
+    <div class="project-card">
 
       <el-form :model="releaseDetail" :rules="rules" ref="releaseDetail" label-width="200px" class="demo-ruleForm">
         
@@ -33,7 +29,7 @@
         <el-button type="primary" class="submit" @click.native.prevent="handleSubmit">Submit</el-button>
       </div>
 
-    </el-card>
+    </div>
 
 
   </div>
@@ -74,7 +70,6 @@ export default {
         visibility: 'internal',
         desc: ''
       },
-      title: '',
       rules: {
         version: [
           { message: '请填写此字段', trigger: 'blur' },
@@ -154,7 +149,6 @@ export default {
         return
       }
       if (id) {
-        this.title = 'Edit'
         this.$store.dispatch('getReleaseDetail', {
           pid: query.pid,
           id: id,
@@ -168,7 +162,6 @@ export default {
           }
         })
       } else {
-        this.title = 'Add'
         this.$store.dispatch('setReleaseDetailEmpty')
         setTimeout(function () {
           tinymce.EditorManager.init({
@@ -202,16 +195,6 @@ export default {
 <style scoped lang="less">
   @color: #73879C;
   .add {
-    .title {
-      padding: 10px 20px 10px 10px;
-      h3 {
-        float: left;
-        height: 30px;
-        line-height: 30px;
-        font-size: 17px;
-        color: @color;
-      }
-    }
     .el-form {
       max-width: 750px;
       position: relative;

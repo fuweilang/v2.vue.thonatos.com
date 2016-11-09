@@ -6,7 +6,7 @@
 
         <el-row class="tac">
           <el-col :span="24">
-            <el-menu class="el-menu-vertical-demo" theme="dark" prop>
+            <el-menu class="el-menu-vertical-demo" theme="dark">
 
               <el-submenu index="1">
                 <template slot="title"><i class="el-icon-message"></i>Release</template>
@@ -21,10 +21,6 @@
               <el-submenu index="2">
                 <template slot="title"><i class="el-icon-menu"></i>System</template>
                 <el-menu-item index="2-1">
-                  <router-link to="/more" class="link-text">more</router-link>
-                </el-menu-item>
-
-                <el-menu-item index="2-2">
                   <span class="link-text" @click='logout'>退出</span>
                 </el-menu-item>
               </el-submenu>
@@ -62,11 +58,19 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .appframe {
     overflow: hidden;
     min-height: 100vh;
     background: #1f2f3d;
+    .project-card {
+      border: none;
+      padding: 30px 20px;
+      background: #fff;
+      box-shadow: none;
+      overflow: hidden;
+      border-radius: 0;
+    }
     .nav_title {
       min-width: 201px;
       width: 100%;

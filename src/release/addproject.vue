@@ -1,11 +1,7 @@
 <template>
   <div class="add">
 
-    <div class="title clearfix">
-      <h3>Projects {{ title }}</h3>
-    </div>
-
-    <el-card class="box-card">
+    <div class="project-card">
 
       <el-form :model="project" :rules="rules" ref="project" label-width="200px" class="demo-ruleForm">
 
@@ -37,7 +33,7 @@
         <el-button type="primary" class="submit" @click.native.prevent="handleSubmit">Submit</el-button>
       </div>
 
-    </el-card>
+    </div>
 
   </div>
 </template>
@@ -77,7 +73,6 @@ export default {
         desc: ''
       },
       admin: '',
-      title: '',
       rules: {
         name: [
           { message: '请填写此字段', trigger: 'blur' },
@@ -186,10 +181,8 @@ export default {
       query = this.$route.query
       id = query.id
       if (id) {
-        this.title = 'Edit'
         this.getProject(id)
       } else {
-        this.title = 'Add'
         this.setProjectEmpty()
       }
     }
@@ -213,16 +206,6 @@ export default {
 <style scoped lang="less">
   @color: #73879C;
   .add {
-    .title {
-      padding: 10px 20px 10px 10px;
-      h3 {
-        float: left;
-        height: 30px;
-        line-height: 30px;
-        font-size: 17px;
-        color: @color;
-      }
-    }
     .el-form {
       max-width: 750px;
       position: relative;
