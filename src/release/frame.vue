@@ -6,7 +6,7 @@
 
         <el-row class="tac">
           <el-col :span="24">
-            <el-menu class="el-menu-vertical-demo" theme="dark">
+            <el-menu class="el-menu-vertical-demo" theme="dark" default-active="1-1">
 
               <el-submenu index="1">
                 <template slot="title"><i class="el-icon-message"></i>Release</template>
