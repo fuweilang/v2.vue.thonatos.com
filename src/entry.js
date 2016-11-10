@@ -5,7 +5,6 @@ import store from './store/'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 
-import Login from './login/login'
 import ReleaseFrame from './release/frame'
 import Projects from './release/projects'
 import Addproject from './release/addproject'
@@ -20,10 +19,6 @@ const routes = [
   {
     path: '/',
     component: Index
-  },
-  {
-    path: '/login',
-    component: Login
   },
   {
     path: '/projects/:p/:c',
