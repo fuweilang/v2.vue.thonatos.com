@@ -82,7 +82,7 @@ function guardRoute (route, redirect, next) {
     if (bool) {
       next()
     } else {
-      next('/login')
+      next('/')
     }
   })
 }
