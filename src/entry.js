@@ -12,6 +12,11 @@ import Releaselist from './release/releaselist'
 import Addrelease from './release/addrelease'
 import Index from './index/index'
 
+
+// import PanoPlayer from '../_directives/PanoPlayer'
+// Vue.directive('panoplayer', PanoPlayer)
+// <div id='panoplayer' v-panoplayer="pano" :status="normal" :muted="muted"></div>
+
 Vue.use(Element)
 Vue.use(VueRouter)
 
