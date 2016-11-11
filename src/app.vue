@@ -18,16 +18,12 @@ export default{
 </script>
 <style lang="less">
   html,
-  body{
+  body,#app{
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
-  }
-  #app{
-    background: #2d2d2d url("./assets/bg_index.png") -70px -20px;
-    height: 100%;
   }
   * {
     font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;

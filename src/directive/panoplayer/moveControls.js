@@ -10,9 +10,7 @@
  */
 
 var THREE = require('three')
-
 export default function (object, domElement) {
-
   var _this = this
   var lon = 0
   var lat = 0
@@ -29,7 +27,6 @@ export default function (object, domElement) {
   _this.prop.mousePositionRelative = [0, 0]
 
   function getContainerDimensions () {
-
     return _this.domElement !== document ? {
       size: [_this.domElement.offsetWidth, _this.domElement.offsetHeight],
       offset: [_this.domElement.offsetLeft, _this.domElement.offsetTop]
@@ -40,7 +37,6 @@ export default function (object, domElement) {
   }
 
   function onMouseMove (event) {
-
     event.preventDefault()
 
     if (_this.enabled === false) return
@@ -62,7 +58,6 @@ export default function (object, domElement) {
 
     // change axis to container center(x/2,y/2)
     _this.prop.mousePositionRelative = [rX - containerSize[0] / 2, rY - containerSize[1] / 2]
-
   }
 
   _this.connect = function () {
@@ -76,7 +71,6 @@ export default function (object, domElement) {
   }
 
   _this.update = function () {
-
     if (!_this.enabled) return
 
     lon = _this.prop.mousePositionRelative[0] * 0.2

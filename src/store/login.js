@@ -37,7 +37,7 @@ const moduleLogin = {
           }
         }
       }, (res) => {
-        console.log(1 + res)
+        console.log(res)
       })
     },
     logout (state, callback) {

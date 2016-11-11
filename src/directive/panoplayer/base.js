@@ -2,16 +2,10 @@
  *
  * play.js.
  *
- * @project     vue.thonatos.com
- * @datetime    17:09 - 16/9/8
- * @author      Thonatos.Yang <thonatos.yang@gmail.com>
- * @copyright   Thonatos.Yang <https://www.thonatos.com>
- *
  */
 
 import MoveControls from './moveControls'
 
-var STATS = require('./stats')
 var THREE = require('three')
 var VIDEO_ERROR = {
   1: 'video loading aborted',
@@ -21,10 +15,8 @@ var VIDEO_ERROR = {
 }
 
 export default function (bundleInterface, bundleProtected) {
-
   var obj = {}
   var _protected = bundleProtected || {}
-  // _interface = bundleInterface || {}
 
   var camera
   var scene
@@ -38,10 +30,8 @@ export default function (bundleInterface, bundleProtected) {
   var clock
   var videoMesh
   var requestID
-  var stats
 
   _protected.init = function (options) {
-
     // Video
     video = document.createElement('video')
     video.width = 2048
@@ -59,11 +49,11 @@ export default function (bundleInterface, bundleProtected) {
     }
 
     video.addEventListener('play', function () {
-      console.log('play', video.currentTime)
+    //  console.log('play', video.currentTime)
     }, false)
 
     video.addEventListener('canplay', function () {
-      console.log('canplay', video.currentTime)
+    //  console.log('canplay', video.currentTime)
     }, false)
 
     // Canvas
@@ -86,39 +76,13 @@ export default function (bundleInterface, bundleProtected) {
     videoMesh.scale.x = -1
     scene.add(videoMesh)
 
-    scene.add(_protected.createLabel('this is a test', 100, 'white', 'green'))
-
-    // var size = 150
-    // var geometry = new THREE.BoxGeometry(size, size, size)
-    // var material = new THREE.MeshBasicMaterial({
-    //   wireframe: true,
-    //   wireframeLinewidth: 1
-    // })
-    // var mesh = new THREE.Mesh(geometry, material)
-    // mesh.position.set(0, 0, 500)
-    // scene.add(mesh)
-
-    var helper = new THREE.GridHelper(1000, 100)
-    helper.position.set = 0
-    helper.material.opacity = 0.25
-    helper.material.transparent = true
-    scene.add(helper)
-
-    var axis = new THREE.AxisHelper(500)
-    axis.position.set(0, 0, 0)
-    scene.add(axis)
-
     renderer = new THREE.WebGLRenderer()
     renderer.setSize(container.clientWidth, container.clientHeight)
 
     container.appendChild(renderer.domElement)
 
-    stats = new STATS()
-    container.appendChild(stats.dom)
-
     clock = new THREE.Clock()
     controls = new MoveControls(camera, container)
-
   }
 
   _protected.createLabel = function (text, size, color, background) {
@@ -156,7 +120,7 @@ export default function (bundleInterface, bundleProtected) {
   }
 
   _protected.animate = function () {
-    requestID = requestAnimationFrame(_protected.animate)
+    requestID = window.requestAnimationFrame(_protected.animate)
     _protected.render()
   }
 
@@ -170,7 +134,6 @@ export default function (bundleInterface, bundleProtected) {
     // for update
     var delta = clock.getDelta()
     controls.update(delta)
-    stats.update()
   }
 
   obj.init = function (element, options) {
@@ -196,8 +159,7 @@ export default function (bundleInterface, bundleProtected) {
 
   obj.dispose = function () {
     video.pause()
-    cancelAnimationFrame(requestID)
+    window.cancelAnimationFrame(requestID)
   }
-
   return obj
 }

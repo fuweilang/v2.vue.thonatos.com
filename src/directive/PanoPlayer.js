@@ -1,12 +1,5 @@
 /**
- *
  * three.js.
- *
- * @project     vue.thonatos.com
- * @datetime    19:38 - 16/9/7
- * @author      Thonatos.Yang <thonatos.yang@gmail.com>
- * @copyright   Thonatos.Yang <https://www.thonatos.com>
- *
  */
 
 import Vue from 'vue'
@@ -15,61 +8,31 @@ import PanoPlayer from './panoplayer/base'
 export default {
   deep: true,
   params: ['muted'],
-  paramWatchers: {
-    muted: function (val, oldVal) {
-      var _this = this
-      if (val === true) {
-        _this.instance.mute(val)
-      } else {
-        _this.instance.mute(val)
-      }
-    }
-  },
-  bind: function () {
-    var _this = this
-    _this.instance = new PanoPlayer()
-    // console.error('init')
+  muted: false,
+  bind: function (el) {
+    el.instance = new PanoPlayer()
 
     Vue.nextTick(function () {
-
-      // console.error('init')
-      _this.instance.init(_this.el, {url: require('../_assets/w.9.6.30.mp4')})
-
-      // show loading animation
-      if (_this.params.loading === true) {
-        _this.instance.showLoading()
-      }
+      var param = {url: require('file!../assets/index.mp4')}
+      el.instance.init(el, param)
 
       // auto resize
-      var resizeEvent = new Event('resize')
-      _this.resizeEventHandler = function () {
-        _this.instance.resize()
+      el.resizeEventHandler = function () {
+        el.instance.resize()
       }
-
-      _this.el.addEventListener('resize', _this.resizeEventHandler, false)
-
+      el.addEventListener('resize', el.resizeEventHandler, false)
       window.onresize = function () {
-        _this.el.dispatchEvent(resizeEvent)
+        el.instance.resize()
       }
     })
   },
-  update: function (val, oldVal) {
-    console.log(val)
-    // var _this = this
-    // var pano = val
-    // _this.instance = new PanoPlayer()
-
-    Vue.nextTick(function () {
-      // console.error('update')
-      // _this.instance.dispose()
-      // _this.instance.init(_this.el, pano)
-      // _this.instance.setOption(options)
-    })
+  update: function (el) {
+    // 点击静音按钮
+    el.muted = !el.muted
+    el.instance.mute(el.muted)
   },
-  unbind: function () {
-    var _this = this
-    console.error('unbind')
-    _this.instance.dispose()
-    _this.el.removeEventListener('resize', _this.resizeEventHandler, false)
+  unbind: function (el) {
+    el.instance.dispose()
+    el.removeEventListener('resize', el.resizeEventHandler, false)
   }
 }

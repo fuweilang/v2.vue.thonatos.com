@@ -11,12 +11,10 @@ import Addproject from './release/addproject'
 import Releaselist from './release/releaselist'
 import Addrelease from './release/addrelease'
 import Index from './index/index'
+import Document from './document/document'
+import PanoPlayer from './directive/PanoPlayer'
 
-
-// import PanoPlayer from '../_directives/PanoPlayer'
-// Vue.directive('panoplayer', PanoPlayer)
-// <div id='panoplayer' v-panoplayer="pano" :status="normal" :muted="muted"></div>
-
+Vue.directive('panoplayer', PanoPlayer)
 Vue.use(Element)
 Vue.use(VueRouter)
 
@@ -24,6 +22,10 @@ const routes = [
   {
     path: '/',
     component: Index
+  },
+  {
+    path: '/docs',
+    component: Document
   },
   {
     path: '/projects/:p/:c',

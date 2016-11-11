@@ -1,18 +1,15 @@
 <template>
-  <div>
     <div id="content">
       <nav>
         <ul class="menu">
           <li class="menu-item brand"><router-link to="/">Insta360-DEV</router-link></li>
           <li class="menu-item"><router-link to="/">首页</router-link></li>
-          <li class="menu-item"><router-link to="/">文档</router-link></li>
+          <li class="menu-item"><router-link to="/docs">文档</router-link></li>
           <li class="menu-item"><a @click="showLoginDialog" class="cursor-pointer">项目</a></li>
 
           <li class="menu-item" v-show="loginButtonVisible"><a @click="showLoginDialog" class="cursor-pointer" >登录</a></li>
 
           <li class="menu-item" v-show="!loginButtonVisible"><a @click="logout" class="cursor-pointer" >退出</a></li>
-
-
         </ul>
       </nav>
       <el-dialog title="登录" v-model="loginDialogVisible" class="login-dialog" size="tiny">
@@ -31,7 +28,6 @@
       </el-dialog>
 
     </div>
-  </div>
 </template>
 <script>
 export default {
@@ -54,11 +50,10 @@ export default {
             },
             callback: function (bool) {
               if (bool) {
+              // 隐藏登录按钮和登录框，显示退出按钮
                 _this.loginButtonVisible = false
                 _this.loginDialogVisible = false
                 _this.$router.push('/projects')
-              } else {
-
               }
             }
           })
@@ -79,7 +74,8 @@ export default {
     },
     logout: function () {
       this.$store.dispatch('logout', bool => {
-        window.location.reload()
+        this.$router.push('/')
+        this.loginButtonVisible = true
       })
     }
   },
@@ -125,6 +121,10 @@ export default {
   #content{
     width: 960px;
     margin:0 auto;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    margin-left:-480px ;
   }
   .menu{
     list-style: none;
