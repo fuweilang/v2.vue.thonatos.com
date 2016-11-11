@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import Cache from './lib/cache'
+import Config from './lib/config'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -9,7 +10,7 @@ Vue.use(VueResource)
 const moduleLogin = {
   state: {
     cache: new Cache(),
-    host: 'http://192.168.3.60:3000/api',
+    host: Config.dev.host,
     tid: null
   },
   mutations: {
@@ -24,7 +25,6 @@ const moduleLogin = {
       url = state.host + '/auth'
       Vue.http.post(url, data).then((res) => {
         data = res.body
-        console.log(data.flag)
         if (data.flag === false) {
           callback(false)
         } else {
@@ -38,6 +38,7 @@ const moduleLogin = {
         }
       }, (res) => {
         console.log(res)
+        return false
       })
     },
     logout (state, callback) {
