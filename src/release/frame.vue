@@ -50,7 +50,7 @@ export default {
       var _this = this
       this.$store.dispatch('logout', function (bool) {
         if (bool) {
-          _this.$router.push('/login')
+          _this.$router.push('/')
         }
       })
     }

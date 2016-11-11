@@ -22,7 +22,6 @@ const moduleLogin = {
         return
       }
       callback = opts.callback
-      console.log(state.host)
       url = state.host + '/auth'
       Vue.http.post(url, data).then((res) => {
         data = res.body

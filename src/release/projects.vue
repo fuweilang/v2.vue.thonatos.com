@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-
     <div class="project-card">
       <ul class="datatable">
 
@@ -67,7 +66,6 @@
           <div class="detail" :class="{ 'hide': item.deschide}" v-html="item.desc">
           </div>
         </li>
-        
       </ul>
 
       <div class="paging">
@@ -81,7 +79,6 @@
       </div>
 
     </div>
-
   </div>
 </template>
 

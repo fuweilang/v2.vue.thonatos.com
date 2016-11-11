@@ -25,7 +25,8 @@
     "vue-cookie": "^1.0.0",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.1",
-    "vuex": "^2.0.0"
+    "vuex": "^2.0.0",
+    "three": "^0.80.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

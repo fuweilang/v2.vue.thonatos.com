@@ -5,13 +5,16 @@ import store from './store/'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 
-import Login from './login/login'
 import ReleaseFrame from './release/frame'
 import Projects from './release/projects'
 import Addproject from './release/addproject'
 import Releaselist from './release/releaselist'
 import Addrelease from './release/addrelease'
 import Index from './index/index'
+
+// import PanoPlayer from '../_directives/PanoPlayer'
+// Vue.directive('panoplayer', PanoPlayer)
+// <div id='panoplayer' v-panoplayer="pano" :status="normal" :muted="muted"></div>
 
 Vue.use(Element)
 Vue.use(VueRouter)
@@ -20,10 +23,6 @@ const routes = [
   {
     path: '/',
     component: Index
-  },
-  {
-    path: '/login',
-    component: Login
   },
   {
     path: '/projects/:p/:c',
@@ -82,7 +81,7 @@ function guardRoute (route, redirect, next) {
     if (bool) {
       next()
     } else {
-      next('/login')
+      next('/')
     }
   })
 }
