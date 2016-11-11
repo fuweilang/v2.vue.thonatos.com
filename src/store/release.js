@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import Cache from './lib/cache'
+import Config from './lib/config'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -36,7 +37,7 @@ const moduleRelease = {
       desc: ''
     },
     cache: new Cache(),
-    host: 'http://192.168.3.60:3000/api'
+    host: Config.dev.host
   },
   mutations: {
     loadProjectlist (state, opts) {
@@ -65,7 +66,7 @@ const moduleRelease = {
         state.projectlist.pageTotal = list.count
         state.projectlist.currentPage = parseInt(c)
       }, (res) => {
-        console.log(res)
+        return false
       })
     },
     addProject (state, opts) {
@@ -90,11 +91,11 @@ const moduleRelease = {
           })
         }
       }, (res) => {
-        console.log(res)
         callback({
           bool: false,
           msg: '修改失败'
         })
+        return false
       })
     },
     updateProject (state, opts) {
@@ -141,7 +142,7 @@ const moduleRelease = {
           opts.callback(state.project)
         }
       }, (res) => {
-        console.log(res)
+        return false
       })
     },
     setProjectEmpty (state) {
@@ -207,7 +208,7 @@ const moduleRelease = {
         state.releaselist = release
         state.releaselist.pageTotal = release.count
       }, (res) => {
-        console.log(res)
+        return false
       })
     },
     getReleaseDetail (state, opts) {
@@ -230,7 +231,7 @@ const moduleRelease = {
           opts.callback(state.releaseDetail)
         }
       }, (res) => {
-        console.log(res)
+        return false
       })
     },
     updateRelease (state, opts) {
@@ -255,11 +256,11 @@ const moduleRelease = {
           })
         }
       }, (res) => {
-        console.log(res)
         callback({
           bool: false,
           msg: '修改失败'
         })
+        return false
       })
     },
     setReleaseListEmpty (state) {
@@ -295,11 +296,11 @@ const moduleRelease = {
           })
         }
       }, (res) => {
-        console.log(res)
         callback({
           bool: false,
           msg: '添加失败'
         })
+        return false
       })
     },
     deleteRelease (state, opts) {
@@ -326,11 +327,11 @@ const moduleRelease = {
           })
         }
       }, (res) => {
-        console.log(res)
         callback({
           bool: false,
           msg: '删除失败'
         })
+        return false
       })
     }
   },

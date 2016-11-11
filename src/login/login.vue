@@ -50,7 +50,6 @@ export default {
             }
           })
         } else {
-          console.log('error')
           return false
         }
       })
