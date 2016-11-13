@@ -1,0 +1,390 @@
+---
+swagger: "2.0"
+info:
+  description: "深圳岚锋创视网络科技有限公司"
+  version: "1.0.0"
+  title: "开发者中心"
+# host: "account.arashivision.com"
+# host: "localhost:3000"
+host: "192.168.3.60:3000"
+basePath: "/api"
+schemes:
+- "http"
+produces:
+- "application/json"
+paths:
+  /auth:
+    post:
+      tags:
+      - Auth
+      summary: 获取用户Token
+      description: 通过工号与密码获取用户Token
+      parameters:
+      - name: jobnumber
+        in: formData
+        description: 工号
+        required: false
+        type: string
+      - name: password
+        in: formData
+        description: 密码
+        required: false
+        type: string
+      responses:
+        200:
+          description: Auth successful.
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: Token id
+              valid:
+                type: boolean
+                description: token是否可用
+              value:
+                type: string
+                description: Token的值
+              expired:
+                type: number
+                description: 过期时间
+              jobnumber:
+                type: string
+                description: 员工工号  
+        404:
+          description: Not found.
+          schema:
+            $ref: "#/definitions/Error"                        
+        500:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /project:
+    get: 
+      tags:
+      - Project
+      summary: 获取项目/项目列表信息
+      description: 通过id获取指定项目或者通过limit/offset获取项目列表
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string
+      - name: id
+        in: query
+        description: 项目id
+        required: false
+        type: string
+      - name: limit
+        in: query
+        description: 每页限制
+        required: false
+        type: number   
+      - name: offset
+        in: query
+        description: 偏移量
+        required: false
+        type: number               
+      responses:
+        default:
+          description: get record successful.
+          schema:
+            type: object
+            properties:
+              count:
+                type: number
+                description: 记录数量
+              rows:
+                type: object
+                description: 记录数组                 
+        200:
+          description: get records successful.
+          schema:
+            $ref: "#/definitions/Project" 
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - Project
+      summary: 删除项目
+      description: 通过id删除指定项目 
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string 
+      - name: id
+        in: query
+        description: 项目id
+        required: true
+        type: string        
+      responses:
+        200:
+          description: 删除成功或者失败
+          schema:
+            type: boolean                                          
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"  
+    put:
+      tags:
+      - Project
+      summary: 更新项目
+      description: 创建新项目或者更新项目 
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string 
+      - name: name
+        in: formData
+        description: 名称
+        required: true
+        type: string       
+      - name: repo
+        in: formData
+        description: 地址
+        required: true
+        type: string      
+      - name: desc
+        in: formData
+        description: 描述
+        required: true
+        type: string      
+      - name: visibility
+        in: formData
+        description: 可见性(public|internal|private)
+        required: true
+        type: string                               
+      responses:
+        200:
+          description: 删除成功或者失败
+          schema:
+            type: string                                        
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"  
+  /project/{pid}/release:
+    get: 
+      tags:
+      - Release
+      summary: 获取版本/版本列表
+      description: 通过id获取版本或者通过limit/offset获取版本列表
+      produces:
+      - "application/json"      
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string
+      - name: pid
+        in: path
+        description: 项目id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: query
+        description: 版本id
+        required: false
+        type: string
+      - name: limit
+        in: query
+        description: 每页限制
+        required: false
+        type: number   
+      - name: offset
+        in: query
+        description: 偏移量
+        required: false
+        type: number               
+      responses:
+        default:
+          description: get record successful.
+          schema:
+            type: object
+            properties:
+              count:
+                type: number
+                description: 记录数量
+              rows:
+                type: object
+                description: 记录数组                 
+        200:
+          description: get records successful.
+          schema:
+            $ref: "#/definitions/Release" 
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        404:
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - Release
+      summary: 删除版本
+      description: 通过id删除指定版本 
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string 
+      - name: pid
+        in: path
+        description: 项目id
+        required: true
+        type: integer
+        format: int64        
+      - name: id
+        in: query
+        description: 版本id
+        required: true
+        type: string        
+      responses:
+        200:
+          description: 删除成功或者失败
+          schema:
+            type: boolean                                          
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"  
+    put:
+      tags:
+      - Release
+      summary: 更新版本
+      description: 创建新版本或者更新旧版本 
+      parameters:
+      - name: authToken
+        in: header
+        description: Token
+        required: true
+        type: string 
+      - name: pid
+        in: path
+        description: 项目id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: formData
+        description: 版本ID
+        required: false
+        type: integer
+      - name: version
+        in: formData
+        description: 版本
+        required: true
+        type: string       
+      - name: link
+        in: formData
+        description: 地址
+        required: true
+        type: string      
+      - name: desc
+        in: formData
+        description: 描述
+        required: true
+        type: string      
+      - name: summary
+        in: formData
+        description: 摘要
+        required: true
+        type: string                               
+      responses:
+        200:
+          description: 更新或者创建成功
+          schema:
+            type: string                                        
+        403:
+          description: Auth Failed.
+          schema:
+            $ref: "#/definitions/Error"             
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"  
+definitions:
+  Project:
+    type: object
+    properties:
+      id:
+        type: number
+        description: id          
+      name:
+        type: string
+        description: 名称
+      desc:
+        type: string
+        description: 描述        
+      repo:
+        type: string
+        description: repo地址
+      visibility:
+        type: string
+        description: 可见性 
+      tid:
+        type: number
+        description: token id
+  Release:
+    type: object
+    properties:
+      id:
+        type: number
+        description: id          
+      desc:
+        type: string
+        description: 描述        
+      link:
+        type: string
+        description: 链接
+      version:
+        type: string
+        description: 版本        
+      summary:
+        type: string
+        description: 摘要 
+      tid:
+        type: number
+        description: token id        
+  Error:
+    type: object
+    properties:
+      err:
+        type: object

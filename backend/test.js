@@ -1,0 +1,2 @@
+var DTalkCrypt = require('./dTalkCrypt')
+
