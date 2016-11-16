@@ -13,7 +13,8 @@ export default {
     el.instance = new PanoPlayer()
 
     Vue.nextTick(function () {
-      var param = {url: require('file!../assets/index.mp4')}
+      // var param = {url: require('file!../assets/index.mp4')}
+      var param = {url: ''}
       el.instance.init(el, param)
 
       // auto resize

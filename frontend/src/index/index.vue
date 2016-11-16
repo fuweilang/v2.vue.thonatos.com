@@ -16,7 +16,8 @@ export default {
     return {
       unmuted: true,
       pano: {
-        url: require('file!../assets/index.mp4')
+        // url: require('file!../assets/index.mp4')
+        url: ''
       }
     }
   },

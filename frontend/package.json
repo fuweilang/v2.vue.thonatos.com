@@ -19,14 +19,14 @@
     "moment": "^2.15.1",
     "morgan": "^1.7.0",
     "superagent": "^2.3.0",
+    "three": "^0.82.1",
     "tinymce": "^4.4.3",
     "ueditor": "^1.1.4",
     "vue": "^2.0.1",
     "vue-cookie": "^1.0.0",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.0.1",
-    "vuex": "^2.0.0",
-    "three": "^0.80.1"
+    "vuex": "^2.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",

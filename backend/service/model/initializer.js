@@ -16,7 +16,6 @@ module.exports = function (callback) {
     }
     console.log(msg)
   }
-
   sequelize.sync({ force: true }).then(function () {     
     _callback(null, 'Sync Database Success')    
   }).catch(function (e) {
